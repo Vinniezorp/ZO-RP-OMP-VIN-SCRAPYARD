@@ -13,7 +13,7 @@ You can contribute code by submitting a pull request. All pull requests need to 
 You will require the following libraries to run and compile the game mode. They have not been included with this source code as they are separate open source projects. Logan's map file is also not included with this source as it is his project, and he updates and allows me usage of it for the ZO-RP server only, not for other servers. An empty copy of the SQLite file is also provided.
 
 - [Open.MP server v1.4.0.2779](https://github.com/openmultiplayer/open.mp/releases/tag/v1.4.0.2779)
-  - Download the windows version to get the latest version of the PAWN compiler
+  - Download the Windows version to get the latest version of the PAWN compiler
 - [YSI v5.10.0006](https://github.com/pawn-lang/YSI-Includes/releases/download/v5.10.0006/YSI-Includes.zip) (See below for list of YSI libraries currently in use)
   - y_commands
   - y_dialog
@@ -24,10 +24,10 @@ You will require the following libraries to run and compile the game mode. They 
 - [Dialog-Pages v3.3.0](https://github.com/Nickk888SAMP/Dialog-Pages/releases/tag/3.3.0)
 - [eSelection](https://github.com/TommyB123/eSelection/blob/db371eb137dfbf6eacab7c7eea661714fd722bde/eSelection.inc)
 - [ColAndreas v1.5.0](https://github.com/Pottus/ColAndreas/releases/tag/1.5.0)
-  - The Scriptfiles folder on this repo contains the generated files required for the plugin, you will only need the plugin binary and include file from this link
+  - The Scriptfiles folder on this repo contains the generated files required for the plugin; you will only need the plugin binary and include the file from this link
 - [Pawn.RakNet v1.6.0-omp](https://github.com/katursis/Pawn.RakNet/releases/tag/1.6.0-omp)
 - [PawnPlus v1.5.1](https://github.com/IS4Code/PawnPlus/releases/tag/v1.5.1)
 
-I use [VSCodium](https://vscodium.com/) for my IDE of choice when coding PAWN, with the [PAWN Tools](https://open-vsx.org/extension/southclaws/vscode-pawn) extension. This repository includes the .vscode folder which has the tasks.json file for setting up the ability to compile the gamemode from within VSCodium using CTRL + LEFT SHIFT + B.
+I use [VSCodium](https://vscodium.com/) for my IDE of choice when coding PAWN, with the [PAWN Tools](https://open-vsx.org/extension/southclaws/vscode-pawn) extension. This repository includes the .vscode folder, which has the tasks.json file for setting up the ability to compile the game mode from within VSCodium using CTRL + LEFT SHIFT + B.
 
-Finally, the Zombie skins used in game were downloaded from [here](https://libertycity.net/files/gta-san-andreas/185232-skiny-zombi-san-andreas.html). The skins originally came from a singleplayer mod called Zombie Andreas Complete. I have not included them skins used on the server here as they were not created by us. The skins can be added to the root of the models folder in your local test server, you will have to change their names to match those found in the artconfig.txt (or change the artconfig.txt in your local version, either or)!
+Finally, the Zombie skins used in the game were downloaded from [here](https://libertycity.net/files/gta-san-andreas/185232-skiny-zombi-san-andreas.html). The skins originally came from a singleplayer mod called Zombie Andreas Complete. I have not included the skins used on the server here, as they were not created by us. The skins can be added to the root of the models folder in your local test server; you will have to change their names to match those found in the artconfig.txt (or change the artconfig.txt in your local version, either or)!
