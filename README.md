@@ -4,13 +4,30 @@
 ## Why?
 ZO-RP has for its whole lifetime been closed source. Only a select few people have ever had access to versions of the game mode. I have decided that in the best interest of preserving this game mode and hopefully building it up into something truly amazing that I will open source the latest version I have been working on. The hope is that in time, more people can contribute to the source and we can create the best Zombie Roleplay server on the Open Multiplayer platform. This also takes the pressure off me being the only developer and allows the server to have better and potentially more frequent updates.
 
+The gamemode as of writing this (04/04/2025) is incomplete and requires a lot of work to reach v1.0.0. I consider it to still be bare bones and a lot of the code could do with tidying up and optimizing. A lot of the basic ideas are in place and some fo the core functionality is in place.
+
 ## Contributing
 You can contribute code by submitting a pull request. All pull requests need to be signed off by myself (or eventually other trusted developers) before it is merged into the main branch's source code. The source code is released under the [GPL-3.0 license](https://github.com/zombie-outbreak/ZO-RP-OMP/blob/main/LICENSE).
 
-## Libraries Required
-You will require the following libraries to run and compile the game mode. They have not been included with this source code as they are separate open source projects. Logan's map file is also not included with this source as it is his project, and he updates and allows me usage of it for the ZO-RP server only, not for other servers.
+## Libraries and Tools Required
+You will require the following libraries to run and compile the game mode. They have not been included with this source code as they are separate open source projects. Logan's map file is also not included with this source as it is his project, and he updates and allows me usage of it for the ZO-RP server only, not for other servers. An empty copy of the SQLite file is also provided.
 
 - [Open.MP server v1.4.0.2779](https://github.com/openmultiplayer/open.mp/releases/tag/v1.4.0.2779)
-- [YSI v5.10.0006](https://github.com/pawn-lang/YSI-Includes/releases/download/v5.10.0006/YSI-Includes.zip)
+  - Download the windows version to get the latest version of the PAWN compiler
+- [YSI v5.10.0006](https://github.com/pawn-lang/YSI-Includes/releases/download/v5.10.0006/YSI-Includes.zip) (See below for list of YSI libraries currently in use)
+  - y_commands
+  - y_dialog
 - [Streamer Plugin v2.3.6](https://github.com/samp-incognito/samp-streamer-plugin/releases/tag/v2.9.6)
-- 
+- [samp-bcrypt v0.4.1](https://github.com/Sreyas-Sreelal/samp-bcrypt/releases/tag/0.4.1)
+- [Filemanager v1.5.1](https://github.com/JaTochNietDan/SA-MP-FileManager/releases/tag/1.5.1)
+- [Weapon Config](https://github.com/oscar-broman/samp-weapon-config)
+- [Dialog-Pages v3.3.0](https://github.com/Nickk888SAMP/Dialog-Pages/releases/tag/3.3.0)
+- [eSelection](https://github.com/TommyB123/eSelection/blob/db371eb137dfbf6eacab7c7eea661714fd722bde/eSelection.inc)
+- [ColAndreas v1.5.0](https://github.com/Pottus/ColAndreas/releases/tag/1.5.0)
+  - The Scriptfiles folder on this repo contains the generated files required for the plugin, you will only need the plugin binary and include file from this link
+- [Pawn.RakNet v1.6.0-omp](https://github.com/katursis/Pawn.RakNet/releases/tag/1.6.0-omp)
+- [PawnPlus v1.5.1](https://github.com/IS4Code/PawnPlus/releases/tag/v1.5.1)
+
+I use [VSCodium](https://vscodium.com/) for my IDE of choice when coding PAWN, with the [PAWN Tools](https://open-vsx.org/extension/southclaws/vscode-pawn) extension. This repository includes the .vscode folder which has the tasks.json file for setting up the ability to compile the gamemode from within VSCodium using CTRL + LEFT SHIFT + B.
+
+Finally, the Zombie skins used in game were downloaded from [here](https://libertycity.net/files/gta-san-andreas/185232-skiny-zombi-san-andreas.html). The skins originally came from a singleplayer mod called Zombie Andreas Complete. I have not included them skins used on the server here as they were not created by us. The skins can be added to the root of the models folder in your local test server, you will have to change their names to match those found in the artconfig.txt (or change the artconfig.txt in your local version, either or)!
