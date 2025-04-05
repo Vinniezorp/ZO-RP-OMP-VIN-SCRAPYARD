@@ -26,8 +26,10 @@ You will require the following libraries to run and compile the game mode. They 
 - [ColAndreas v1.5.0](https://github.com/Pottus/ColAndreas/releases/tag/1.5.0)
   - The Scriptfiles folder on this repo contains the generated files required for the plugin; you will only need the plugin binary and include the file from this link
 - [Pawn.RakNet v1.6.0-omp](https://github.com/katursis/Pawn.RakNet/releases/tag/1.6.0-omp)
+  - Place the .dll/.so in the components folder.
 - [PawnPlus v1.5.1](https://github.com/IS4Code/PawnPlus/releases/tag/v1.5.1)
 - [sscanf v2.13.8](https://github.com/Y-Less/sscanf/releases/tag/v2.13.8)
+  - I advise using the component version, putting the .dll/.so in the OMP components folder.
 
 I use [VSCodium](https://vscodium.com/) for my IDE of choice when coding PAWN, with the [PAWN Tools](https://open-vsx.org/extension/southclaws/vscode-pawn) extension. This repository includes the .vscode folder, which has the tasks.json file for setting up the ability to compile the game mode from within VSCodium using CTRL + LEFT SHIFT + B.
 
