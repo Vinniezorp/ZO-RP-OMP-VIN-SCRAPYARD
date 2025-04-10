@@ -72,7 +72,7 @@
 
 @cmd() slap(playerid, params[], help)
 {
-    new id, reason[76], Float:pPos[3];
+    new id, reason[76], Float:tmpPPos[3];
 
     if(player[playerid][admin] < 1)
 		return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
@@ -83,8 +83,8 @@
     if(!IsPlayerConnected(id))
 		return SendClientMessage(playerid, COLOR_RED, "Invalid ID.");
 
-    GetPlayerPos(id, pPos[0], pPos[1], pPos[2]);
-	SetPlayerPos(id, pPos[0], pPos[1], pPos[2] + 10);
+    GetPlayerPos(id, tmpPPos[0], tmpPPos[1], tmpPPos[2]);
+	SetPlayerPos(id, tmpPPos[0], tmpPPos[1], tmpPPos[2] + 10);
 	PlayerPlaySound(id, 1130, 0.0, 0.0, 0.0);
 	SendClientMessageToAll(COLOR_ADMINMSG, "Administrator %s has slapped %s [Reason: %s]", player[playerid][Name], player[id][Name], reason);
     return 1;
@@ -162,12 +162,12 @@
     if(!IsPlayerConnected(targetId))
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Invalid player ID given.");
 
-    new Float:pPos[3], tmpInt, tmpVirWorld;
-    GetPlayerPos(targetId, pPos[0], pPos[1], pPos[2]);
+    new Float:tmpPPos[3], tmpInt, tmpVirWorld;
+    GetPlayerPos(targetId, tmpPPos[0], tmpPPos[1], tmpPPos[2]);
     tmpInt = GetPlayerInterior(targetId);
     tmpVirWorld = GetPlayerVirtualWorld(targetId);
 
-    SetPlayerPos(playerid, pPos[0], pPos[1], pPos[2]);
+    SetPlayerPos(playerid, tmpPPos[0], tmpPPos[1], tmpPPos[2]);
     SetPlayerInterior(playerid, tmpInt);
     SetPlayerVirtualWorld(playerid, tmpVirWorld);
 
@@ -186,12 +186,12 @@
     if(!IsPlayerConnected(targetId))
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Invalid player ID given.");
 
-    new Float:pPos[3], tmpInt, tmpVirWorld;
-    GetPlayerPos(playerid, pPos[0], pPos[1], pPos[2]);
+    new Float:tmpPPos[3], tmpInt, tmpVirWorld;
+    GetPlayerPos(playerid, tmpPPos[0], tmpPPos[1], tmpPPos[2]);
     tmpInt = GetPlayerInterior(playerid);
     tmpVirWorld = GetPlayerVirtualWorld(playerid);
 
-    SetPlayerPos(targetId, pPos[0], pPos[1], pPos[2]);
+    SetPlayerPos(targetId, tmpPPos[0], tmpPPos[1], tmpPPos[2]);
     SetPlayerInterior(targetId, tmpInt);
     SetPlayerVirtualWorld(targetId, tmpVirWorld);
 

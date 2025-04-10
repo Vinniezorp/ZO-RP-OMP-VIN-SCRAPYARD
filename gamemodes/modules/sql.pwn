@@ -145,10 +145,10 @@ OnPlayerCharacterDataLoaded(playerid)
 		player[playerid][disease] = DB_GetFieldIntByName(Result, "disease");
 		player[playerid][maxDisease] = DB_GetFieldIntByName(Result, "maxdisease");
 		player[playerid][spawned] = DB_GetFieldIntByName(Result, "spawned");
-		player[playerid][px] = DB_GetFieldFloatByName(Result, "px");
-		player[playerid][py] = DB_GetFieldFloatByName(Result, "py");
-		player[playerid][pz] = DB_GetFieldFloatByName(Result, "pz");
-		player[playerid][pa] = DB_GetFieldFloatByName(Result, "pa");
+		player[playerid][pPos][0] = DB_GetFieldFloatByName(Result, "px");
+		player[playerid][pPos][1] = DB_GetFieldFloatByName(Result, "py");
+		player[playerid][pPos][2] = DB_GetFieldFloatByName(Result, "pz");
+		player[playerid][pPos][3] = DB_GetFieldFloatByName(Result, "pa");
 		player[playerid][plrinterior] = DB_GetFieldIntByName(Result, "interior");
 		player[playerid][world] = DB_GetFieldIntByName(Result, "virtualworld");
 		player[playerid][level] = DB_GetFieldIntByName(Result, "level");
@@ -184,7 +184,7 @@ OnPlayerCharacterDataLoaded(playerid)
 			}
 			else
 			{
-				SetSpawnInfo(playerid, NO_TEAM, player[playerid][skin], player[playerid][px], player[playerid][py], player[playerid][pz], player[playerid][pa], 0, 0, 0, 0, 0, 0);
+				SetSpawnInfo(playerid, NO_TEAM, player[playerid][skin], player[playerid][pPos][0], player[playerid][pPos][1], player[playerid][pPos][2], player[playerid][pPos][3], 0, 0, 0, 0, 0, 0);
 			}
 		}
 		else
@@ -195,7 +195,7 @@ OnPlayerCharacterDataLoaded(playerid)
 			}
 			else
 			{
-				SetSpawnInfo(playerid, TEAM_ZOMBIE, player[playerid][skin], player[playerid][px], player[playerid][py], player[playerid][pz], player[playerid][pa], 9, 1, 0, 0, 0, 0);
+				SetSpawnInfo(playerid, TEAM_ZOMBIE, player[playerid][skin], player[playerid][pPos][0], player[playerid][pPos][1], player[playerid][pPos][2], player[playerid][pPos][3], 9, 1, 0, 0, 0, 0);
 			}
 		}
 		SetPlayerName(playerid, player[playerid][chosenChar]);
@@ -267,8 +267,8 @@ SavePlayerCharacter(playerid, const currentCharacter[])
 	/*
 	* Get player's location data
 	*/
-	GetPlayerPos(playerid, player[playerid][px], player[playerid][py], player[playerid][pz]);
-	GetPlayerFacingAngle(playerid, player[playerid][pa]);
+	GetPlayerPos(playerid, player[playerid][pPos][0], player[playerid][pPos][1], player[playerid][pPos][2]);
+	GetPlayerFacingAngle(playerid, player[playerid][pPos][3]);
 	player[playerid][plrinterior] = GetPlayerInterior(playerid);
 	player[playerid][world] = GetPlayerVirtualWorld(playerid);
 
@@ -279,8 +279,8 @@ SavePlayerCharacter(playerid, const currentCharacter[])
 	disease = '%d', maxdisease = '%d', spawned = '%d', px = '%f', py = '%f', pz = '%f', pa = '%f', interior = '%d', virtualworld = '%d', level = '%d', \
 	perkpoints = '%d', faction = '%d', factionrank = '%d', fuelcanamount = '%d' WHERE name = '%q'", 
 	player[playerid][health], player[playerid][maxHealth], player[playerid][hunger], player[playerid][maxHunger], player[playerid][thirst], 
-	player[playerid][maxThirst], player[playerid][disease], player[playerid][maxDisease], player[playerid][spawned], player[playerid][px], 
-	player[playerid][py], player[playerid][pz], player[playerid][pa], player[playerid][plrinterior], player[playerid][world], player[playerid][level], 
+	player[playerid][maxThirst], player[playerid][disease], player[playerid][maxDisease], player[playerid][spawned], player[playerid][pPos][0], 
+	player[playerid][pPos][1], player[playerid][pPos][2], player[playerid][pPos][3], player[playerid][plrinterior], player[playerid][world], player[playerid][level], 
 	player[playerid][perkPoints], player[playerid][plrFaction], player[playerid][factionrank], playerInventoryResource[playerid][28], currentCharacter);
 
 	/*

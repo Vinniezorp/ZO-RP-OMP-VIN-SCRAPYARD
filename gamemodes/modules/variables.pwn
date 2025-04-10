@@ -40,10 +40,7 @@ enum E_PLAYERS
     disease,
     maxDisease,
     spawned,
-    Float:px,
-    Float:py,
-    Float:pz,
-    Float:pa,
+    Float:pPos[4],
     plrinterior,
     world,
     level,
@@ -90,10 +87,7 @@ enum E_PLAYERS
     */
     bool:isflying,
     flyTimer,
-    Float:flyx,
-    Float:flyy,
-    Float:flyz,
-    Float:flya,
+    Float:flyPos[4],
 };
 new player[MAX_PLAYERS][E_PLAYERS];
 
