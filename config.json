@@ -49,7 +49,7 @@
         "vehicle_respawn_time": 10000,
         "weather": 10
     },
-    "language": "English",
+    "language": "",
     "logging": {
         "enable": true,
         "file": "log.txt",
@@ -100,16 +100,14 @@
         "main_scripts": [
             "zorp 1"
         ],
-        "side_scripts": [
-            ""
-        ]
+        "side_scripts": []
     },
     "rcon": {
         "allow_teleport": false,
         "enable": false,
-        "password": "changeme"
+        "password": "thegamemodesetstherconpassword"
     },
     "sleep": 5.0,
     "use_dyn_ticks": true,
-    "website": "zo-rp.com"
+    "website": "open.mp"
 }

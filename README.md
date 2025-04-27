@@ -10,7 +10,7 @@ The gamemode as of writing this (04/04/2025) is incomplete and requires a lot of
 You can contribute code by submitting a pull request. All pull requests need to be signed off by myself (or eventually other trusted developers) before it is merged into the main branch's source code. The source code is released under the [GPL-3.0 license](https://github.com/zombie-outbreak/ZO-RP-OMP/blob/main/LICENSE).
 
 ## Libraries and Tools Required
-You will require the following libraries to run and compile the game mode. They have not been included with this source code as they are separate open source projects. Logan's map file is also not included with this source as it is his project, and he updates and allows me usage of it for the ZO-RP server only, not for other servers. An empty copy of the SQLite file is also provided.
+The following libraries are used. This repository includes the windows DLLs for localhost testing. Please note that the ZO-RP map used on the live server is closed source, and not shared here.
 
 - [Open.MP server v1.4.0.2779](https://github.com/openmultiplayer/open.mp/releases/tag/v1.4.0.2779)
   - Download the Windows version to get the latest version of the PAWN compiler
@@ -31,6 +31,6 @@ You will require the following libraries to run and compile the game mode. They 
 - [sscanf v2.13.8](https://github.com/Y-Less/sscanf/releases/tag/v2.13.8)
   - I advise using the component version, putting the .dll/.so in the OMP components folder.
 
-I use [VSCodium](https://vscodium.com/) for my IDE of choice when coding PAWN, with the [PAWN Tools](https://open-vsx.org/extension/southclaws/vscode-pawn) extension. This repository includes the .vscode folder, which has the tasks.json file for setting up the ability to compile the game mode from within VSCodium using CTRL + LEFT SHIFT + B.
+I use [VSCodium](https://vscodium.com/) for my IDE of choice when coding PAWN, with the [PAWN Tools](https://open-vsx.org/extension/southclaws/vscode-pawn) extension. This repository includes the .vscode folder, which has the tasks.json file for setting up the ability to compile the game mode from within VSCodium using CTRL + LEFT SHIFT + B. You can use VsCode as well if you wish as it's basically the same IDE but with added Microsoft telemetry.
 
-Finally, the Zombie skins used in the game were downloaded from [here](https://libertycity.net/files/gta-san-andreas/185232-skiny-zombi-san-andreas.html). The skins originally came from a singleplayer mod called Zombie Andreas Complete. I have not included the skins used on the server here, as they were not created by us. The skins can be added to the root of the models folder in your local test server; you will have to change their names to match those found in the artconfig.txt (or change the artconfig.txt in your local version, either or)!
+Finally, the Zombie skins used in the game were downloaded from [here](https://libertycity.net/files/gta-san-andreas/185232-skiny-zombi-san-andreas.html). The skins originally came from a singleplayer mod called Zombie Andreas Complete.
