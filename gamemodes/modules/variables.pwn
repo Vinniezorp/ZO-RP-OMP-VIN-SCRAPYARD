@@ -44,6 +44,7 @@ enum E_PLAYERS
     plrinterior,
     world,
     level,
+    exp,
     perkPoints,
     plrFaction,
     factionrank,

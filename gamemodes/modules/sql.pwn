@@ -152,6 +152,7 @@ OnPlayerCharacterDataLoaded(playerid)
 		player[playerid][plrinterior] = DB_GetFieldIntByName(Result, "interior");
 		player[playerid][world] = DB_GetFieldIntByName(Result, "virtualworld");
 		player[playerid][level] = DB_GetFieldIntByName(Result, "level");
+		player[playerid][exp] = DB_GetFieldIntByName(Result, "exp");
 		player[playerid][perkPoints] = DB_GetFieldIntByName(Result, "perkpoints");
 		player[playerid][plrFaction] = DB_GetFieldIntByName(Result, "faction");
 		player[playerid][factionrank] = DB_GetFieldIntByName(Result, "factionrank");
@@ -277,11 +278,11 @@ SavePlayerCharacter(playerid, const currentCharacter[])
 	*/
 	DB_ExecuteQuery(database, "UPDATE characters SET health = '%f', maxhealth = '%f', hunger = '%d', maxhunger = '%d', thirst = '%d', maxthirst = '%d', \
 	disease = '%d', maxdisease = '%d', spawned = '%d', px = '%f', py = '%f', pz = '%f', pa = '%f', interior = '%d', virtualworld = '%d', level = '%d', \
-	perkpoints = '%d', faction = '%d', factionrank = '%d', fuelcanamount = '%d' WHERE name = '%q'", 
+	exp = '%d', perkpoints = '%d', faction = '%d', factionrank = '%d', fuelcanamount = '%d' WHERE name = '%q'", 
 	player[playerid][health], player[playerid][maxHealth], player[playerid][hunger], player[playerid][maxHunger], player[playerid][thirst], 
 	player[playerid][maxThirst], player[playerid][disease], player[playerid][maxDisease], player[playerid][spawned], player[playerid][pPos][0], 
 	player[playerid][pPos][1], player[playerid][pPos][2], player[playerid][pPos][3], player[playerid][plrinterior], player[playerid][world], player[playerid][level], 
-	player[playerid][perkPoints], player[playerid][plrFaction], player[playerid][factionrank], playerInventoryResource[playerid][28], currentCharacter);
+	player[playerid][exp], player[playerid][perkPoints], player[playerid][plrFaction], player[playerid][factionrank], playerInventoryResource[playerid][28], currentCharacter);
 
 	/*
 	* Should do a full save on the player's inventory as well, just in case anything has been missed during normal play
