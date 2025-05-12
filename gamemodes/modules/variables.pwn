@@ -291,7 +291,18 @@ new Float:fuelPump[MAX_FUEL_PUMPS][3] =
 {
     // Redlands West fuel station
     {1602.9343,2193.6711,11.0610}, {1597.0671,2193.6724,11.0610}, {1591.2882,2193.7856,11.0610},
-    {1591.2859,2204.5198,11.0610}, {1597.0685,2204.6177,11.0610}, {1602.9369,2204.5825,11.0610}
+    {1591.2859,2204.5198,11.0610}, {1597.0685,2204.6177,11.0610}, {1602.9369,2204.5825,11.0610},
+    
+    // Bone County fuel station
+    {602.9949,1708.2792,6.9922}, {625.0079,1677.0963,6.9922},
+    
+    // Emerald Isle fuel station
+    {2208.6399,2469.7236,10.8203}, {2208.7542,2474.8875,10.8203}, {2208.9165,2480.4324,10.8203},
+    {2195.8984,2470.0959,10.8203}, {2195.8499,2474.6213,10.8203}, {2195.7922,2480.0513,10.8203},
+    
+    // Strip (bottom) fuel station
+    {2121.1812,914.1354,10.9609}, {2115.1523,914.0585,10.9577}, {2109.4880,914.0550,10.9565},
+    {2108.7522,926.0942,10.9609}, {2114.7932,926.0942,10.9609}, {2120.6821,926.0942,10.9609}
 };
 
 /*
@@ -412,8 +423,9 @@ new Float:scavAreas[MAX_SCAV_AREAS][3] =
     {2552.2383,2082.8428,3.7656}, {2545.3179,2088.5593,3.7656},
 
     // misc crates
-    {2069.0959,1182.9626,10.6719}, {2097.7065,1284.7268,10.8203},
-
+    {2069.0959,1182.9626,10.6719}, {2097.7065,1284.7268,10.8203}, {2173.4246,1039.9601,10.9824},
+    {2174.9014,1034.9553,10.9824},
+    
     // SCAV_AREA_MONEY
     {2088.0459,2071.2639,11.0579}, {2165.3809,944.0316,-3.1484}, {2198.3540,1986.6331,-0.9844},
 
@@ -491,8 +503,9 @@ new scavInterior[MAX_SCAV_AREAS] =
     0, 0, 0,
     0, 0,
 
-    // misc weapons
-    0, 0,
+    // misc crates
+    0, 0, 0,
+    0,
 
     // SCAV_AREA_MONEY
     0, 0, 0,
@@ -571,8 +584,9 @@ new scavVirWorld[MAX_SCAV_AREAS] =
     10017, 10017, 10017,
     10017, 10017,
 
-    // misc weapons
-    0, 0,
+    // misc crates
+    0, 0, 0,
+    0,
 
     // SCAV_AREA_MONEY
     0, 10005, 10004,
@@ -651,8 +665,9 @@ new scavAreaType[MAX_SCAV_AREAS] =
     SCAV_AREA_WEAPONS, SCAV_AREA_WEAPONS, SCAV_AREA_WEAPONS,
     SCAV_AREA_WEAPONS, SCAV_AREA_WEAPONS,
 
-    // misc weapons
-    SCAV_AREA_WEAPONS, SCAV_AREA_WEAPONS,
+    // misc crates
+    SCAV_AREA_WEAPONS, SCAV_AREA_WEAPONS, SCAV_AREA_WEAPONS,
+    SCAV_AREA_WEAPONS,
 
     // SCAV_AREA_MONEY
     SCAV_AREA_MONEY, SCAV_AREA_MONEY, SCAV_AREA_MONEY,
@@ -731,8 +746,9 @@ new bool:locationActive[MAX_SCAV_AREAS] =
     true, true, true,
     true, true,
 
-    // misc weapons
-    true, true,
+    // misc crates
+    true, true, true,
+    true,
 
     // SCAV_AREA_MONEY
     true, true, true,
