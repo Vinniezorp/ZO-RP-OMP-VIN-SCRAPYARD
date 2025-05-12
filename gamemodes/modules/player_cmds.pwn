@@ -338,37 +338,37 @@
     if(player[playerid][iszombie] == 1)
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You cannot use this as a Zombie.");
 
-	if(GetPVarInt(playerid, "AtProperty") == 1)
+	if(player[playerid][atProperty] == 1)
 		return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You are not at a purchasable location.");
 
-	if(strcmp("Vacant", srvInterior[GetPVarInt(playerid, "AtProperty")][intOwner]) == 1)
+	if(strcmp("Vacant", srvInterior[player[playerid][atProperty]][intOwner]) == 1)
 		return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You cannot purchase a property that is already owned.");
 
-	if(playerInventory[playerid][itemMoneyId] < srvInterior[GetPVarInt(playerid, "AtProperty")][intPrice])
+	if(playerInventory[playerid][itemMoneyId] < srvInterior[player[playerid][atProperty]][intPrice])
 		return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You do not heve enough money to purchase this property.");
 
-    if(srvInterior[GetPVarInt(playerid, "AtProperty")][intType] == INTERIOR_TYPE_PUBLIC)
+    if(srvInterior[player[playerid][atProperty]][intType] == INTERIOR_TYPE_PUBLIC)
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You cannot purchase this property.");
 
 	/*
 	* Purchase the property - first take the player's money
 	*/
-	playerInventory[playerid][itemMoneyId] = playerInventory[playerid][itemMoneyId] - srvInterior[GetPVarInt(playerid, "AtProperty")][intPrice];
+	playerInventory[playerid][itemMoneyId] = playerInventory[playerid][itemMoneyId] - srvInterior[player[playerid][atProperty]][intPrice];
     UpdatePlayerInventoryEntry(playerid, itemMoneyId, player[playerid][chosenChar]);
 
 	/*
 	* Update the interiors database
 	*/
-	DB_ExecuteQuery(database, "UPDATE interiors SET owner = '%q' WHERE id = '%d'", player[playerid][chosenChar], GetPVarInt(playerid, "AtProperty"));
+	DB_ExecuteQuery(database, "UPDATE interiors SET owner = '%q' WHERE id = '%d'", player[playerid][chosenChar], player[playerid][atProperty]);
 
-	DestroyDynamicPickup(interiorEnterPickup[GetPVarInt(playerid, "AtProperty")]);
-	DestroyDynamicPickup(interiorExitPickup[GetPVarInt(playerid, "AtProperty")]);
-	DestroyDynamic3DTextLabel(srvInterior[GetPVarInt(playerid, "AtProperty")][intInfo]);
+	DestroyDynamicPickup(interiorEnterPickup[player[playerid][atProperty]]);
+	DestroyDynamicPickup(interiorExitPickup[player[playerid][atProperty]]);
+	DestroyDynamic3DTextLabel(srvInterior[player[playerid][atProperty]][intInfo]);
 
 	/*
 	* Respawn the interior pickup and 3D text
 	*/
-	LoadInteriorData(GetPVarInt(playerid, "AtProperty"));
+	LoadInteriorData(player[playerid][atProperty]);
 	return 1;
 }
 
@@ -508,7 +508,7 @@
     if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You have to be in the driver's seat of a vehicle to use this command.");
 
-    if((GetTickCount() - GetPVarInt(playerid, "EngineAntiSpam")) < 5000)
+    if((GetTickCount() - player[playerid][engineAntiSpam]) < 5000)
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "Please wait 5 seconds between uses of this command.");
 
     if(serverVehicle[tmpVehicleId][engine])
@@ -522,7 +522,7 @@
         /*
         * Stop the command being used too often
         */
-        SetPVarInt(playerid, "EngineAntiSpam", GetTickCount());
+        player[playerid][engineAntiSpam] = GetTickCount();
         return 1;
     }
 
@@ -628,7 +628,7 @@
     /*
     * Stop the command being used too often
     */
-    SetPVarInt(playerid, "EngineAntiSpam", GetTickCount());
+    player[playerid][engineAntiSpam] = GetTickCount();
     return 1;
 }
 

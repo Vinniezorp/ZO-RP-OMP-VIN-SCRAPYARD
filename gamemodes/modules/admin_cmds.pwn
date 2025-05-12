@@ -36,7 +36,7 @@
             SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/aban");
             SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/ipban");
             SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/rconbanip /unbanip /dsetpw");
-            SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/fly /createinterior /icis /setintvirworld /setinteriortype /setinteriorprice /showinteriors /cancelinterior");
+            SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/fly /createinterior /icis /setintvirworld /showinteriors /cancelinterior");
         }
     }
     return 1;
@@ -368,7 +368,7 @@
     if(sscanf(params, "s[64]", intname)) 
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Syntax error. Correct usage: /createinterior [name]");
 
-    if(GetPVarInt(playerid, "createintstep") >= 1)
+    if(player[playerid][createIntStep] >= 1)
     {
         SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You are already in the middle of creating an interior.");
         SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Either finish creating the one you are doing or use /cancelinterior to cancel current task.");
@@ -381,21 +381,21 @@
     DB_ExecuteQuery(database, "INSERT INTO interiors (name) VALUES ('%q')", intname);
 
     /*
-    * Now set the new ID into the global array and into a PVar for use in other commands
+    * Now set the new ID into the global array and into a Variable for use in other commands
     */
     Result = DB_ExecuteQuery(database, "SELECT id FROM interiors WHERE name = '%q'", intname);
 
 	if(DB_GetFieldCount(Result) > 0)
     {
         newIntId = DB_GetFieldIntByName(Result, "id");
-        SetPVarInt(playerid, "currentInterior", newIntId);
+        player[playerid][currentInterior] = newIntId;
     }
     DB_FreeResultSet(Result);
 
     /*
     * Now we are ready to continue
     */
-    SetPVarInt(playerid, "createintstep", 1);
+    player[playerid][createIntStep] = 1;
     SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Stand where the interior entrance is and use the command /icis");
     return 1;
 }
@@ -406,16 +406,16 @@
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
 
     new Float:ppos[4];
-    switch(GetPVarInt(playerid, "createintstep"))
+    switch(player[playerid][createIntStep])
     {
         case 1:
         {
             GetPlayerPos(playerid, ppos[0], ppos[1], ppos[2]);
             
             DB_ExecuteQuery(database, "UPDATE interiors SET penterx1 = '%f', pentery1 = '%f', penterz1 = '%f' WHERE id = '%d'",
-                ppos[0], ppos[1], ppos[2], GetPVarInt(playerid, "currentInterior"));
+                ppos[0], ppos[1], ppos[2], player[playerid][currentInterior]);
 
-            SetPVarInt(playerid, "createintstep", 2);
+            player[playerid][createIntStep] = 2;
             SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Stand where the player will be teleported to inside the interior then use /icis");
         }
         case 2:
@@ -424,9 +424,9 @@
             GetPlayerFacingAngle(playerid, ppos[3]);
 
             DB_ExecuteQuery(database, "UPDATE interiors SET penterx2 = '%f', pentery2 = '%f', penterz2 = '%f', pentera = '%f' WHERE id = '%d'",
-                ppos[0], ppos[1], ppos[2], ppos[3], GetPVarInt(playerid, "currentInterior"));
+                ppos[0], ppos[1], ppos[2], ppos[3], player[playerid][currentInterior]);
 
-            SetPVarInt(playerid, "createintstep", 3);
+            player[playerid][createIntStep] = 3;
             SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Stand where the player will go to leave the interior then use /icis");
         }
         case 3:
@@ -434,9 +434,9 @@
             GetPlayerPos(playerid, ppos[0], ppos[1], ppos[2]);
 
             DB_ExecuteQuery(database, "UPDATE interiors SET pexitx1 = '%f', pexity1 = '%f', pexitz1 = '%f' WHERE id = '%d'",
-                ppos[0], ppos[1], ppos[2], GetPVarInt(playerid, "currentInterior"));
+                ppos[0], ppos[1], ppos[2], player[playerid][currentInterior]);
 
-            SetPVarInt(playerid, "createintstep", 4);
+            player[playerid][createIntStep] = 4;
             SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Stand where the player will be teleported to outside the interior then use /icis");
         }
         case 4:
@@ -445,9 +445,9 @@
             GetPlayerFacingAngle(playerid, ppos[3]);
 
             DB_ExecuteQuery(database, "UPDATE interiors SET pexitx2 = '%f', pexity2 = '%f', pexitz2 = '%f', pexita = '%f' WHERE id = '%d'",
-                ppos[0], ppos[1], ppos[2], ppos[3], GetPVarInt(playerid, "currentInterior"));
+                ppos[0], ppos[1], ppos[2], ppos[3], player[playerid][currentInterior]);
 
-            SetPVarInt(playerid, "createintstep", 5);
+            player[playerid][createIntStep] = 5;
             SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Now set the interior's virtual world using /setintvirworld.");
         }
         default:
@@ -455,7 +455,7 @@
             SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_ERROR, "ICIS used out of scope.");
             print("====ICIS ERROR====");
             print("Potentially used outside of scope?");
-            printf("createintstep PVAR = %d", GetPVarInt(playerid, "createintstep"));
+            printf("createintstep variable = %d", player[playerid][createIntStep]);
         }
     }
     return 1;
@@ -471,7 +471,7 @@
     if(sscanf(params, "i", intvirworld)) 
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Syntax error. Correct usage: /setintvirworld [virtual world ID]");
 
-    if(GetPVarInt(playerid, "createintstep") != 5)
+    if(player[playerid][createIntStep] != 5)
     {
         SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You have not reached this stage in creating an interior or you are not creating one currently.");
         SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Either start a creation with /createinterior or use /icis at the relevant step.");
@@ -481,109 +481,15 @@
     /*
     * Insert the interior virtual world
     */
-    srvInterior[GetPVarInt(playerid, "currentInterior")][intVirWorld] = intvirworld;
+    srvInterior[player[playerid][currentInterior]][intVirWorld] = intvirworld;
     DB_ExecuteQuery(database, "UPDATE interiors SET virworld = '%d' WHERE id = '%d'", 
-        srvInterior[GetPVarInt(playerid, "currentInterior")][intVirWorld], GetPVarInt(playerid, "currentInterior"));
-
-    /*
-    * Next step
-    */
-    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Now set the default price to buy this interior using /setinteriortype [type]");
-    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Using an ID out of scope will create a purchasable player home by default.");
-    SetPVarInt(playerid, "createintstep", 6);
-    return 1;
-}
-
-@cmd() setinteriortype(playerid, params[], help)
-{
-    new cmdIntType;
-
-    if(player[playerid][admin] < 5)
-        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
-
-    if(sscanf(params, "i", cmdIntType)) 
-        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Syntax error. Correct usage: /setinteriortype [type]");
-
-    if(GetPVarInt(playerid, "createintstep") != 6)
-    {
-        SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You have not reached this stage in creating an interior or you are not creating one currently.");
-        SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Either start a creation with /createinterior or use the relevant command for the current step in the process.");
-        return 1;
-    }
-
-    switch(cmdIntType)
-    {
-        case INTERIOR_TYPE_PLAYERHOME:
-        {
-            SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Interior type set to player home.");
-        }
-        case INTERIOR_TYPE_FACTIONBASE:
-        {
-            SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Interior type set to faction base.");
-        }
-        case INTERIOR_TYPE_PUBLIC:
-        {
-            SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Interior type set to public (non-purchasable, always unlocked).");
-            
-            // interior should be unlocked as it is a public interior
-            DB_ExecuteQuery(database, "UPDATE interiors SET islocked = '0' WHERE id = '%d'", GetPVarInt(playerid, "currentInterior"));
-        }
-        default: 
-        {
-            SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Interior type out of scope, interior has been set to the default (INTERIOR_TYPE_PUBLIC)");
-            cmdIntType = INTERIOR_TYPE_PUBLIC;
-
-            // interior should be unlocked as it is a public interior
-            DB_ExecuteQuery(database, "UPDATE interiors SET islocked = '0' WHERE id = '%d'", GetPVarInt(playerid, "currentInterior"));
-        }
-    }
-
-    /*
-    * Insert the interior type
-    */
-    srvInterior[GetPVarInt(playerid, "currentInterior")][intType] = cmdIntType;
-    DB_ExecuteQuery(database, "UPDATE interiors SET interiortype = '%d' WHERE id = '%d'", 
-        srvInterior[GetPVarInt(playerid, "currentInterior")][intType], GetPVarInt(playerid, "currentInterior"));
-
-
-    /*
-    * Next step
-    */
-    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Now set the default price to buy this interior using /setinteriorprice [amount]");
-    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "If the interior is a public interior for scavenging etc. then please set the price to 0.");
-    SetPVarInt(playerid, "createintstep", 7);
-    return 1;
-}
-
-@cmd() setinteriorprice(playerid, params[], help)
-{
-    new cmdIntPrice;
-
-    if(player[playerid][admin] < 5)
-        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
-
-    if(sscanf(params, "i", cmdIntPrice)) 
-        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Syntax error. Correct usage: /setinteriorprice [amount]");
-
-    if(GetPVarInt(playerid, "createintstep") != 7)
-    {
-        SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You have not reached this stage in creating an interior or you are not creating one currently.");
-        SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Either start a creation with /createinterior or use the relevant command for the current step in the process.");
-        return 1;
-    }
-
-    /*
-    * Insert the interior price
-    */
-    srvInterior[GetPVarInt(playerid, "currentInterior")][intPrice] = cmdIntPrice;
-    DB_ExecuteQuery(database, "UPDATE interiors SET purchaseprice = '%d' WHERE id = '%d'", 
-        srvInterior[GetPVarInt(playerid, "currentInterior")][intPrice], GetPVarInt(playerid, "currentInterior"));
+        srvInterior[player[playerid][currentInterior]][intVirWorld], player[playerid][currentInterior]);
 
     /*
     * Give player confirmation of success
     */
     SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Interior created successfully.");
-    DeletePVar(playerid, "createintstep");
+    player[playerid][createIntStep] = 0;
 
     /*
     * Update interior count
@@ -596,14 +502,14 @@
     /*
     * Load the new interior data
     */
-    LoadInteriorData(GetPVarInt(playerid, "currentInterior"));
-    DeletePVar(playerid, "currentInterior");
+    LoadInteriorData(player[playerid][currentInterior]);
+    player[playerid][currentInterior] = -1;
     return 1;
 }
 
 @cmd() showinteriors(playerid, params[], help)
 {
-    new tmpIntName[64], DBResult:Result;
+    new tmpIntString[64], DBResult:Result;
 
     if(player[playerid][admin] < 5)
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
@@ -614,8 +520,8 @@
 
         if(DB_GetFieldCount(Result) > 0)
         {
-            DB_GetFieldStringByName(Result, "name", tmpIntName, 64);
-            AddDialogListitem(playerid, tmpIntName);
+            DB_GetFieldStringByName(Result, "name", tmpIntString, 64);
+            AddDialogListitem(playerid, tmpIntString);
         }
         DB_FreeResultSet(Result);
     }
@@ -629,21 +535,21 @@
     if(player[playerid][admin] < 5)
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
 
-    if(GetPVarInt(playerid, "createintstep") < 1)
+    if(player[playerid][createIntStep] < 1)
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You are not currently creating an interior.");
 
     /*
     * Send DELETE FROM command to database to remove current interior from the database (stops bugged interiors hopefully)
     */
-    new DBResult:Result = DB_ExecuteQuery(database, "DELETE FROM interiors WHERE id = '%d'", GetPVarInt(playerid, "currentInterior"));
+    new DBResult:Result = DB_ExecuteQuery(database, "DELETE FROM interiors WHERE id = '%d'", player[playerid][currentInterior]);
     DB_FreeResultSet(Result);
 
     /*
     * Cancel and confirm cancellation to player
     */
     SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You cancelled the create/edit interior task.");
-    DeletePVar(playerid, "createintstep");
-    DeletePVar(playerid, "currentInterior");
+    player[playerid][createIntStep] = 0;
+    player[playerid][currentInterior] = -1;
     return 1;
 }
 

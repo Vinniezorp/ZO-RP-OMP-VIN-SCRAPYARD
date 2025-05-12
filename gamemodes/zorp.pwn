@@ -311,12 +311,12 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 {
 	for(new i = 0; i < MAX_SERVER_INTERIORS; i++)
     {
-		if(GetPVarInt(playerid, "createintstep") >= 1) // if player is making an interior then don't call this script until they're done
+		if(player[playerid][createIntStep] >= 1) // if player is making an interior then don't call this script until they're done
             return 1;
 
 		if(pickupid == interiorEnterPickup[i])
 		{
-			SetPVarInt(playerid, "AtProperty", i); // used to determine which property someone is at (for purchasing etc)
+			player[playerid][atProperty] = i; // used to determine which property someone is at (for purchasing etc)
 
 			if(strcmp("Vacant", srvInterior[i][intOwner]) == 0)
 			{
@@ -332,12 +332,12 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 					GameTextForPlayer(playerid, "You entered %s", 5000, 3, srvInterior[i][intName]);
 				}
 				
-				if(GetPVarInt(playerid, "AntiMessageSpam") != 1)
+				if(player[playerid][antiMessageSpam] != 1)
 				{
 					if(srvInterior[i][intType] != INTERIOR_TYPE_PUBLIC)
 					{
 						SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "To purchase this property please type /purchaseproperty.");
-						SetPVarInt(playerid, "AntiMessageSpam", 1);
+						player[playerid][antiMessageSpam] = 1;
 						SetTimerEx("AntiMessageSpamTimer", 2500, false, "d", playerid);
 					}
 				}
@@ -346,10 +346,10 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 			{
 				if(srvInterior[i][intLocked] == 1)
 				{
-					if(GetPVarInt(playerid, "AntiMessageSpam") != 1)
+					if(player[playerid][antiMessageSpam] != 1)
 					{
 						SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You cannot enter this location as it has been locked.");
-						SetPVarInt(playerid, "AntiMessageSpam", 1);
+						player[playerid][antiMessageSpam] = 1;
 						SetTimerEx("AntiMessageSpamTimer", 2500, false, "d", playerid);
 					}
 

@@ -375,8 +375,8 @@ public FillVehicleTimer(playerid, vehicleid, fillType)
 
 public AntiMessageSpamTimer(playerid)
 {
-    DeletePVar(playerid, "AntiMessageSpam");
-    DeletePVar(playerid, "AtProperty");
+    player[playerid][antiMessageSpam] = 0;
+    player[playerid][atProperty] = -1;
     return 1;
 }
 

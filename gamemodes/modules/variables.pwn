@@ -82,6 +82,9 @@ enum E_PLAYERS
     Float:adminPos[4],
     lastInVehId,
     Float:tmpVehPos[3],
+    antiMessageSpam,
+    invGivePlayerId,
+    engineAntiSpam,
 
     /*
     * Admin fly
@@ -89,6 +92,15 @@ enum E_PLAYERS
     bool:isflying,
     flyTimer,
     Float:flyPos[4],
+    
+    /*
+    * Property Variables (used to be slower pVars)
+    */
+    createIntStep,
+    currentInterior,
+    atProperty,
+    tmpIntName[64],
+    
 };
 new player[MAX_PLAYERS][E_PLAYERS];
 

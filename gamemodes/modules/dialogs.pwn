@@ -745,7 +745,7 @@ public InventoryGiveId(playerid, dialogid, response, listitem, string:inputtext[
 		return 1;
 	}
 
-	SetPVarInt(playerid, "inv_giveplayerid", id);
+    player[playerid][invGivePlayerId] = id;
 	Dialog_ShowCallback(playerid, using public InventoryGiveAmount<iiiis>, DIALOG_STYLE_INPUT, "Input an amount to give", "Input an amount of items you wish to give.", "Confirm", "Go Back");
 	return 1;
 }
@@ -755,7 +755,7 @@ public InventoryGiveAmount(playerid, dialogid, response, listitem, string:inputt
 	if(!response)
 		return Dialog_ShowCallback(playerid, using public InventoryMain<iiiis>, DIALOG_STYLE_LIST, "Select A Category", "General\nFood\nDrink\nMedical\nWeapons\nAmmo", "Select", "Close");
 
-	if(!IsPlayerConnected(GetPVarInt(playerid, "inv_giveplayerid")) || IsPlayerNPC(GetPVarInt(playerid, "inv_giveplayerid")))
+	if(!IsPlayerConnected(player[playerid][invGivePlayerId]) || IsPlayerNPC(player[playerid][invGivePlayerId]))
 	{
 		SendClientMessage(playerid, COLOR_RED, "You input an invalid player id.");
 		Dialog_ShowCallback(playerid, using public InventoryGiveId<iiiis>, DIALOG_STYLE_INPUT, "Input a player ID", "Input a player ID to give an item to.", "Confirm", "Go Back");
@@ -772,13 +772,13 @@ public InventoryGiveAmount(playerid, dialogid, response, listitem, string:inputt
 		return 1;
 	}
 
-	playerInventory[GetPVarInt(playerid, "inv_giveplayerid")][player[playerid][chosenItemId]] = playerInventory[GetPVarInt(playerid, "inv_giveplayerid")][player[playerid][chosenItemId]] + amount;
-	SendClientMessage(GetPVarInt(playerid, "inv_giveplayerid"), COLOR_RP_PURPLE, "You were given %d %s from %s.", amount, inventoryItems[player[playerid][chosenItemId]][itemNamePlural], player[playerid][chosenChar]);
+	playerInventory[player[playerid][invGivePlayerId]][player[playerid][chosenItemId]] = playerInventory[player[playerid][invGivePlayerId]][player[playerid][chosenItemId]] + amount;
+	SendClientMessage(player[playerid][invGivePlayerId], COLOR_RP_PURPLE, "You were given %d %s from %s.", amount, inventoryItems[player[playerid][chosenItemId]][itemNamePlural], player[playerid][chosenChar]);
 	UpdatePlayerInventoryEntry(playerid, player[playerid][chosenItemId], player[playerid][chosenChar]);
 
 	playerInventory[playerid][player[playerid][chosenItemId]] = playerInventory[playerid][player[playerid][chosenItemId]] - amount;
-	SendClientMessage(playerid, COLOR_RP_PURPLE, "You gave %s %d %s.", player[GetPVarInt(playerid, "inv_giveplayerid")][chosenChar], amount, inventoryItems[player[playerid][chosenItemId]][itemNamePlural]);
-	UpdatePlayerInventoryEntry(playerid, player[playerid][chosenItemId], player[GetPVarInt(playerid, "inv_giveplayerid")][chosenChar]);
+	SendClientMessage(playerid, COLOR_RP_PURPLE, "You gave %s %d %s.", player[player[playerid][invGivePlayerId]][chosenChar], amount, inventoryItems[player[playerid][chosenItemId]][itemNamePlural]);
+	UpdatePlayerInventoryEntry(playerid, player[playerid][chosenItemId], player[player[playerid][invGivePlayerId]][chosenChar]);
 
 	Dialog_ShowCallback(playerid, using public InventoryMain<iiiis>, DIALOG_STYLE_LIST, "Select A Category", "General\nFood\nDrink\nMedical\nWeapons\nAmmo", "Select", "Close");
 	return 1;
@@ -839,9 +839,8 @@ public InteriorSetName(playerid, dialogid, response, listitem, string:inputtext[
 	if(!response) // don't change
 		return 1;
 
-	new tmpIntName[64], string[128];
-	GetPVarString(playerid, "chosenint", tmpIntName, 64);
-	format(string, sizeof(string), "%s Options", tmpIntName);
+	new string[128];
+	format(string, sizeof(string), "%s Options", player[playerid][tmpIntName]);
 
 	if(strlen(inputtext) > 64)
 	{
@@ -851,7 +850,7 @@ public InteriorSetName(playerid, dialogid, response, listitem, string:inputtext[
 	}
 
 	// update the interior name entry
-    DB_ExecuteQuery(database, "UPDATE interiors SET name = '%q' WHERE name = '%q'", inputtext, tmpIntName);
+    DB_ExecuteQuery(database, "UPDATE interiors SET name = '%q' WHERE name = '%q'", inputtext, player[playerid][tmpIntName]);
 	SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You updated the interior name.");
 	return 1;
 }
@@ -861,9 +860,8 @@ public InteriorSetVirWorld(playerid, dialogid, response, listitem, string:inputt
 	if(!response) // don't change
 		return 1;
 
-	new tmpIntId, tmpIntName[64], string[128], DBResult:Result;
-	GetPVarString(playerid, "chosenint", tmpIntName, 64);
-	format(string, sizeof(string), "%s Options", tmpIntName);
+	new tmpIntId, string[128], DBResult:Result;
+	format(string, sizeof(string), "%s Options", player[playerid][tmpIntName]);
 
 	if(strval(inputtext) < 1000 || strval(inputtext) > 2147483647)
 	{
@@ -873,10 +871,10 @@ public InteriorSetVirWorld(playerid, dialogid, response, listitem, string:inputt
 	}
 
 	// update the virtual world entry
-    DB_ExecuteQuery(database, "UPDATE interiors SET virworld = '%d' WHERE name = '%q'", strval(inputtext), tmpIntName);
+    DB_ExecuteQuery(database, "UPDATE interiors SET virworld = '%d' WHERE name = '%q'", strval(inputtext), player[playerid][tmpIntName]);
 
 	// now get the interior ID and new virtual world for the interior
-	Result = DB_ExecuteQuery(database, "SELECT id, virworld FROM interiors WHERE name = '%q'", tmpIntName);
+	Result = DB_ExecuteQuery(database, "SELECT id, virworld FROM interiors WHERE name = '%q'", player[playerid][tmpIntName]);
 
 	if(DB_GetFieldCount(Result) > 0)
 	{
@@ -905,9 +903,8 @@ public InteriorSetMapIcon(playerid, dialogid, response, listitem, string:inputte
 	if(!response) // don't change
 		return 1;
 
-	new tmpIntId, tmpIntName[64], string[128];
-	GetPVarString(playerid, "chosenint", tmpIntName, 64);
-	format(string, sizeof(string), "%s Options", tmpIntName);
+	new tmpIntId, string[128];
+	format(string, sizeof(string), "%s Options", player[playerid][tmpIntName]);
 
 	if(strval(inputtext) < 0 || strval(inputtext) == 1 || strval(inputtext) == 2 || strval(inputtext) == 3 || strval(inputtext) == 4 || strval(inputtext) == 56 || strval(inputtext) > 63)
 	{
@@ -917,7 +914,7 @@ public InteriorSetMapIcon(playerid, dialogid, response, listitem, string:inputte
 	}
 
 	// update the map icon ID
-    DB_ExecuteQuery(database, "UPDATE interiors SET mapicon = '%d' WHERE name = '%q'", strval(inputtext), tmpIntName);
+    DB_ExecuteQuery(database, "UPDATE interiors SET mapicon = '%d' WHERE name = '%q'", strval(inputtext), player[playerid][tmpIntName]);
 	srvInterior[tmpIntId][mapIconId] = strval(inputtext);
 
 	SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You updated the interior map icon.");
@@ -936,11 +933,10 @@ public InteriorDeleteQuestion(playerid, dialogid, response, listitem, string:inp
 	if(!response) // don't delete
 		return 1;
 
-	new tmpIntId, tmpIntName[64], DBResult:Result;
-	GetPVarString(playerid, "chosenint", tmpIntName, 64);
+	new tmpIntId, DBResult:Result;
 
 	// now get the interior ID and new virtual world for the interior
-	Result = DB_ExecuteQuery(database, "SELECT id FROM interiors WHERE name = '%q'", tmpIntName);
+	Result = DB_ExecuteQuery(database, "SELECT id FROM interiors WHERE name = '%q'", player[playerid][tmpIntName]);
 
 	if(DB_GetFieldCount(Result) > 0)
 	{
@@ -956,7 +952,7 @@ public InteriorDeleteQuestion(playerid, dialogid, response, listitem, string:inp
 	/*
 	* Now Delete interior from the table
 	*/
-    Result = DB_ExecuteQuery(database, "DELETE FROM interiors WHERE name = '%q'", tmpIntName);
+    Result = DB_ExecuteQuery(database, "DELETE FROM interiors WHERE name = '%q'", player[playerid][tmpIntName]);
 	DB_FreeResultSet(Result);
 
 	SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You deleted the interior.");
@@ -1217,8 +1213,8 @@ DialogPages:ShowInteriorsDialog(playerid, response, listitem, inputtext[])
 		return 1;
 
 	new string[128];
+    format(player[playerid][tmpIntName], 64, "%s", inputtext);
 	format(string, sizeof(string), "%s Options", inputtext);
-	SetPVarString(playerid, "chosenint", inputtext);
 	Dialog_ShowCallback(playerid, using public InteriorOptions<iiiis>, DIALOG_STYLE_LIST, string, "Change Name\nSet Virtual World\nSet Map Icon\nDelete", "Select", "Close");
 	return 1;
 }
