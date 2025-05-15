@@ -329,7 +329,7 @@
             */
             if(amountFound > 0)
             {
-                new expEarned = random(5) + 1; // 1 - 5
+                new expEarned = random(3) + 1; // 1 - 3
                 player[playerid][exp] = player[playerid][exp] + expEarned;
                 UpdateHudElementForPlayer(playerid, HUD_INFO);
             }

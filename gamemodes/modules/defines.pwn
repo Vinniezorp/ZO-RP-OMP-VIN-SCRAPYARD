@@ -123,6 +123,11 @@
 #define HUD_ALL 7
 
 /*
+* Levels and EXP
+*/
+#define MAX_LEVELS 99
+
+/*
 * Inventory, Looting, Vendors
 */
 #define MAX_ITEMS 30

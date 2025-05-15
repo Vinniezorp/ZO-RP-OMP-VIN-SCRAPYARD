@@ -211,6 +211,15 @@ public PlayerChecks()
         {
             SetPlayerScore(i, player[i][level]);
         }
+        
+        // player level up!
+        if(player[i][exp] >= expForNextLevel[player[i][level]])
+        {
+            player[i][exp] = player[i][exp] - expForNextLevel[player[i][level]];
+            player[i][level] = player[i][level] + 1;
+            player[i][perkPoints] = player[i][perkPoints] + 1;
+            UpdateHudElementForPlayer(i, HUD_INFO);
+        }
     }
     return 1;
 }
