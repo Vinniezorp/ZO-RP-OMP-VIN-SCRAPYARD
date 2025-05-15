@@ -84,7 +84,7 @@
 
     for(new i = 1; i <= scavAreaCount; i++)
     {
-        if(IsPlayerInRangeOfPoint(playerid, 2.5, scavArea[i][scavPos][0], scavArea[i][scavPos][1], scavArea[i][scavPos][2]))
+        if(IsPlayerInRangeOfPoint(playerid, 1.0, scavArea[i][scavPos][0], scavArea[i][scavPos][1], scavArea[i][scavPos][2]))
         {
             if(!scavArea[i][areaActive])
                 return SendClientMessage(playerid, COLOR_RED, "This location is not currently active.");
@@ -291,6 +291,7 @@
                             if(playerInventory[playerid][fuelcanItemId] >= 1)
                             {
                                 amountFound = 0;
+                                SendClientMessage(playerid, COLOR_RP_PURPLE, "You search the area and cannot find anything of use.");
                             }
                             else
                             {
@@ -321,6 +322,16 @@
                         SendClientMessage(playerid, COLOR_RP_PURPLE, "You search the area and cannot find anything of use.");
                     }
                 }
+            }
+            
+            /*
+            * Give the player some EXP
+            */
+            if(amountFound > 0)
+            {
+                new expEarned = random(5) + 1; // 1 - 5
+                player[playerid][exp] = player[playerid][exp] + expEarned;
+                UpdateHudElementForPlayer(playerid, HUD_INFO);
             }
 
             /*
