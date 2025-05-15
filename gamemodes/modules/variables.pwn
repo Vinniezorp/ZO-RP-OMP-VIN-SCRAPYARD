@@ -121,11 +121,6 @@ enum E_INTERIORS
     intLocked,
     Float:intEnter[7],
     Float:intExit[7],
-    mapIconId,
-
-    // not saved
-    mapIcon,
-    Text3D:intInfo,
 };
 new srvInterior[MAX_SERVER_INTERIORS][E_INTERIORS];
 new serverInteriorCount = 0;

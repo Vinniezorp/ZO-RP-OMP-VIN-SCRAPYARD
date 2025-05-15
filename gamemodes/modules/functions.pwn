@@ -415,88 +415,14 @@ ReturnItemIdByName(const itemName[])
 
 CreateInteriorPickup(interiorid)
 {
-    if(srvInterior[interiorid][intPrice] > 0) // if the price is more than 0 that means it's a specific interior type
-	{
-		new labelText[128];
-		if(strcmp("Vacant", srvInterior[interiorid][intOwner]) == 0)
-		{
-			format(labelText, sizeof(labelText), "Owner: Vacant\nPrice: $%d\nLocked: Yes", srvInterior[interiorid][intPrice]);
-		}
-		else
-		{
-			if(srvInterior[interiorid][intLocked] == 1)
-			{
-				format(labelText, sizeof(labelText), "Owner: %s\nLocked: Yes", srvInterior[interiorid][intOwner]);
-			}
-			else
-			{
-				format(labelText, sizeof(labelText), "Owner: %s\nLocked: No", srvInterior[interiorid][intOwner]);
-			}
-		}
-
-		/*
-		* Create the arrows to show where the entrances are
-		*/
-		switch(srvInterior[interiorid][intType])
-		{
-			case INTERIOR_TYPE_PLAYERHOME:
-			{
-				if(strcmp("Vacant", srvInterior[interiorid][intOwner]) == 0)
-				{
-					interiorEnterPickup[interiorid] = CreateDynamicPickup(UNOWNED_PLAYERHOME_PICKUP, 1, srvInterior[interiorid][intEnter][0], srvInterior[interiorid][intEnter][1], srvInterior[interiorid][intEnter][2], 
-						srvInterior[interiorid][intExitVirWorld], srvInterior[interiorid][intExitWorld]);
-				}
-				else
-				{
-					interiorEnterPickup[interiorid] = CreateDynamicPickup(OWNED_PROPERTY_PICKUP, 1, srvInterior[interiorid][intEnter][0], srvInterior[interiorid][intEnter][1], srvInterior[interiorid][intEnter][2], 
-						srvInterior[interiorid][intExitVirWorld], srvInterior[interiorid][intExitWorld]);
-				}
-
-				srvInterior[interiorid][intInfo] = CreateDynamic3DTextLabel(labelText, COLOR_WHITE, srvInterior[interiorid][intEnter][0], 
-					srvInterior[interiorid][intEnter][1], srvInterior[interiorid][intEnter][2], 20.0, .testlos = 1, .worldid = srvInterior[interiorid][intExitVirWorld], 
-					.interiorid = srvInterior[interiorid][intExitWorld]);
-			}
-			case INTERIOR_TYPE_FACTIONBASE:
-			{
-				if(strcmp("Vacant", srvInterior[interiorid][intOwner]) == 0)
-				{
-					interiorEnterPickup[interiorid] = CreateDynamicPickup(UNOWNED_FACTIONBASE_PICKUP, 1, srvInterior[interiorid][intEnter][0], srvInterior[interiorid][intEnter][1], srvInterior[interiorid][intEnter][2], 
-						srvInterior[interiorid][intExitVirWorld], srvInterior[interiorid][intExitWorld]);
-				}
-				else
-				{
-					interiorEnterPickup[interiorid] = CreateDynamicPickup(OWNED_PROPERTY_PICKUP, 1, srvInterior[interiorid][intEnter][0], srvInterior[interiorid][intEnter][1], srvInterior[interiorid][intEnter][2], 
-						srvInterior[interiorid][intExitVirWorld], srvInterior[interiorid][intExitWorld]);
-				}
-
-				srvInterior[interiorid][intInfo] = CreateDynamic3DTextLabel(labelText, COLOR_WHITE, srvInterior[interiorid][intEnter][0], 
-					srvInterior[interiorid][intEnter][1], srvInterior[interiorid][intEnter][2], 20.0, .testlos = 1, .worldid = srvInterior[interiorid][intExitVirWorld], 
-					.interiorid = srvInterior[interiorid][intExitWorld]);
-			}
-			case INTERIOR_TYPE_PUBLIC:
-			{
-				interiorEnterPickup[interiorid] = CreateDynamicPickup(OWNED_PROPERTY_PICKUP, 1, srvInterior[interiorid][intEnter][0], srvInterior[interiorid][intEnter][1], srvInterior[interiorid][intEnter][2], 
-					srvInterior[interiorid][intExitVirWorld], srvInterior[interiorid][intExitWorld]);
-			}
-		}
-	}
-	else
-	{
-		interiorEnterPickup[interiorid] = CreateDynamicPickup(ENTER_EXIT_INTERIOR_PICKUP, 1, srvInterior[interiorid][intEnter][0], srvInterior[interiorid][intEnter][1], srvInterior[interiorid][intEnter][2], 
-			srvInterior[interiorid][intExitVirWorld], srvInterior[interiorid][intExitWorld]);
-	}
+    /*
+    * Create the arrows to show where the entrances are
+    */
+    interiorEnterPickup[interiorid] = CreateDynamicPickup(ENTER_EXIT_INTERIOR_PICKUP, 1, srvInterior[interiorid][intEnter][0], srvInterior[interiorid][intEnter][1], srvInterior[interiorid][intEnter][2], 
+		srvInterior[interiorid][intExitVirWorld], srvInterior[interiorid][intExitWorld]);
 
 	// every interior has an arrow for the exit point
 	interiorExitPickup[interiorid] = CreateDynamicPickup(ENTER_EXIT_INTERIOR_PICKUP, 1, srvInterior[interiorid][intExit][0], srvInterior[interiorid][intExit][1], srvInterior[interiorid][intExit][2], 
 		srvInterior[interiorid][intVirWorld], srvInterior[interiorid][intWorld]);
 	return 1;
 }
-
-/*CreateInteriorMapIcon(interiorid)
-{
-	if(srvInterior[interiorid][mapIconId] == 0)
-		return 1;
-
-	srvInterior[interiorid][mapIcon] = CreateDynamicMapIcon(srvInterior[interiorid][intEnter][0], srvInterior[interiorid][intEnter][1], srvInterior[interiorid][intEnter][2], srvInterior[interiorid][mapIconId], 0, 0);
-	return 1;
-}*/

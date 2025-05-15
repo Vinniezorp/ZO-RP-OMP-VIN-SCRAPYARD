@@ -465,7 +465,6 @@ LoadInteriorData(interiorid)
 		srvInterior[interiorid][intExit][4] = DB_GetFieldFloatByName(Result, "pexity2");
 		srvInterior[interiorid][intExit][5] = DB_GetFieldFloatByName(Result, "pexitz2");
 		srvInterior[interiorid][intExit][6] = DB_GetFieldFloatByName(Result, "pexita");
-		srvInterior[interiorid][mapIconId] = DB_GetFieldIntByName(Result, "mapicon");
     }
     DB_FreeResultSet(Result);
 
@@ -473,7 +472,6 @@ LoadInteriorData(interiorid)
 	* Create and display the text above a pickup
 	*/
 	CreateInteriorPickup(interiorid);
-	//CreateInteriorMapIcon(interiorid);
 	return 1;
 }
 
