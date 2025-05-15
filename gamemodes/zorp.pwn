@@ -135,7 +135,7 @@ public OnGameModeInit()
             .testlos = 1, .worldid = lockerVirWorld[i], .interiorid = lockerInterior[i]);
     }
 
-    for(new i = 1; i < scavAreaCount; i++) // ids start from 1 due to database ID autoincrement starting at 1
+    for(new i = 1; i <= scavAreaCount; i++)
     {
         LoadScavArea(i);
     }

@@ -82,7 +82,7 @@
     if(GetPlayerState(playerid) != PLAYER_STATE_ONFOOT)
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You can only use this command while on foot.");
 
-    for(new i = 0; i < MAX_SCAV_AREAS; i++)
+    for(new i = 1; i <= scavAreaCount; i++)
     {
         if(IsPlayerInRangeOfPoint(playerid, 2.5, scavArea[i][scavPos][0], scavArea[i][scavPos][1], scavArea[i][scavPos][2]))
         {

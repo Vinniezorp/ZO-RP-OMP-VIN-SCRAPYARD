@@ -472,6 +472,9 @@ LoadInteriorData(interiorid)
 	* Create and display the text above a pickup
 	*/
 	CreateInteriorPickup(interiorid);
+    
+    // map icons
+    srvInterior[interiorid][mapIcon] = CreateDynamicMapIcon(srvInterior[interiorid][intEnter][0], srvInterior[interiorid][intEnter][1], srvInterior[interiorid][intEnter][2], 0, COLOR_LIGHTGREEN, 0, 0);
 	return 1;
 }
 

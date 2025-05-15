@@ -121,6 +121,7 @@ enum E_INTERIORS
     intLocked,
     Float:intEnter[7],
     Float:intExit[7],
+    mapIcon,
 };
 new srvInterior[MAX_SERVER_INTERIORS][E_INTERIORS];
 new serverInteriorCount = 0;
@@ -360,7 +361,7 @@ new lockerInventory[MAX_PLAYERS][MAX_ITEMS];
 /*
 * Scavenging Locations
 */
-new scavAreaCount;
+new scavAreaCount = 0;
 enum E_SCAV_AREAS
 {
     scavId,
