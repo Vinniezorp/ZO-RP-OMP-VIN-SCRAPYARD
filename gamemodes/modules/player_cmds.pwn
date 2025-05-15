@@ -84,12 +84,12 @@
 
     for(new i = 0; i < MAX_SCAV_AREAS; i++)
     {
-        if(IsPlayerInRangeOfPoint(playerid, 2.5, scavAreas[i][0], scavAreas[i][1], scavAreas[i][2]))
+        if(IsPlayerInRangeOfPoint(playerid, 2.5, scavArea[i][scavPos][0], scavArea[i][scavPos][1], scavArea[i][scavPos][2]))
         {
-            if(!locationActive[i])
+            if(!scavArea[i][areaActive])
                 return SendClientMessage(playerid, COLOR_RED, "This location is not currently active.");
 
-            switch(scavAreaType[i])
+            switch(scavArea[i][scavType])
             {
                 case SCAV_AREA_SCRAP:
                 {
@@ -327,7 +327,7 @@
             * Set location's active to false so it cannot be searched again for X amount of time.
             */
             UpdateDynamic3DTextLabelText(scavTextLabel[i], COLOR_RED, "Looted");
-            locationActive[i] = false;
+            scavArea[i][areaActive] = false;
             SetTimerEx("ResetSearchZone", 15000, false, "d", i); // SHOULD BE A LOT SLOWER, SET TO A LOW AMOUNT FOR TESTING PURPOSES
         }
     }
