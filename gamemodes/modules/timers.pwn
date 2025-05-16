@@ -437,5 +437,9 @@ public RespawnAfterDeath(playerid)
 
     // just in case of lag or some other issue which causes the CJ skin to be applied to a user force set their skin
     SetPlayerSkin(playerid, player[playerid][skin]);
+    
+    /*Reduce the xp and inv items by 20% with the exception for weapons and key items. Send on-death message*/
+	ReducePlayerInventoryAndExp(playerid);
+    UpdateHudElementForPlayer(playerid, HUD_INFO);
     return 1;
 }

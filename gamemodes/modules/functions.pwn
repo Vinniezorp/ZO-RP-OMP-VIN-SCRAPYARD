@@ -7,7 +7,6 @@
 /*
 * Server Message Functions - Using PawnPlus
 */
-
 native PlayerServerMessage(playerid, color, AmxString:message) = SendClientMessage;
 native AdminMessage(playerid, color, AmxString:message) = SendClientMessage;
 native ProxMessage(playerid, color, AmxString:message) = SendClientMessage;
@@ -274,9 +273,24 @@ stock LockVehicleDoors(vehicleid)
 	SetVehicleParamsEx(vehicleid,engine2,lights2,alarm2,VEHICLE_PARAMS_OFF,bonnet2,boot2,objective2);
 }
 
+decode_lights(lightsParam, &front_left_light, &front_right_light, &back_lights)
+{
+    front_left_light = lightsParam & 1;
+    front_right_light = lightsParam >> 2 & 1;
+    back_lights = lightsParam >> 6 & 1;
+}
+
 encode_lights(light1, light2, light3, light4)
 {
 	return light1 | (light2 << 1) | (light3 << 2) | (light4 << 3);
+}
+
+decode_tires(tiresParam, &rear_right_tire, &front_right_tire, &rear_left_tire, &front_left_tire)
+{
+    rear_right_tire = tiresParam & 1;
+    front_right_tire = tiresParam >> 1 & 1;
+    rear_left_tire = tiresParam >> 2 & 1;
+    front_left_tire = tiresParam >> 3 & 1;
 }
 
 encode_tires(tire1, tire2, tire3, tire4)
@@ -289,6 +303,14 @@ stock encode_tires_bike(rear, front)
 	return rear | (front << 1);
 }
 
+decode_doors(doorsParam, &bonnet, &boot, &driver_door, &passenger_door)
+{
+    bonnet = doorsParam & 7;
+    boot = doorsParam >> 8 & 7;
+    driver_door = doorsParam >> 16 & 7;
+    passenger_door = doorsParam >> 24 & 7;
+}
+
 encode_doors(bonnet2, boot2, driver_door, passenger_door, behind_driver_door, behind_passenger_door)
 {
 	// the back doors are not currently synced in SA-MP/OpenMP
@@ -297,6 +319,17 @@ encode_doors(bonnet2, boot2, driver_door, passenger_door, behind_driver_door, be
 
 	// will be modified once again, when rear doors are synced.
 	return bonnet2 | (boot2 << 8) | (driver_door << 16) | (passenger_door << 24);
+}
+
+decode_panels(panelParam, &front_left_panel, &front_right_panel, &rear_left_panel, &rear_right_panel, &windshield, &front_bumper, &rear_bumper)
+{
+    front_left_panel = panelParam & 15;
+    front_right_panel = panelParam >> 4 & 15;
+    rear_left_panel = panelParam >> 8 & 15;
+    rear_right_panel = panelParam >> 12 & 15;
+    windshield = panelParam >> 16 & 15;
+    front_bumper = panelParam >> 20 & 15;
+    rear_bumper = panelParam >> 24 & 15;
 }
 
 encode_panels(flp, frp, rlp, rrp, windshield, front_bumper, rear_bumper)
@@ -341,6 +374,26 @@ bool:IsPlayerAtFuelPump(playerid)
 			return false;
 	}
 	return true;
+}
+
+ScrapRequiredToRepairVeh(playerid)
+{
+    new scrapRequired;
+    new front_left_panel, front_right_panel, rear_left_panel, rear_right_panel, windshield, front_bumper, rear_bumper;
+    new bonnet, boot, driver_door, passenger_door;
+    new front_left_light, front_right_light, back_lights;
+    new rear_right_tire, front_right_tire, rear_left_tire, front_left_tire;
+    
+    GetVehicleDamageStatus(player[playerid][lastInVehId], serverVehicle[player[playerid][lastInVehId]][panels], serverVehicle[player[playerid][lastInVehId]][doors], serverVehicle[player[playerid][lastInVehId]][lights], serverVehicle[player[playerid][lastInVehId]][tires]);
+    decode_panels(serverVehicle[player[playerid][lastInVehId]][panels], front_left_panel, front_right_panel, rear_left_panel, rear_right_panel, windshield, front_bumper, rear_bumper);
+    decode_doors(serverVehicle[player[playerid][lastInVehId]][doors], bonnet, boot, driver_door, passenger_door);
+    decode_lights(serverVehicle[player[playerid][lastInVehId]][lights], front_left_light, front_right_light, back_lights);
+    decode_tires(serverVehicle[player[playerid][lastInVehId]][tires], rear_right_tire, front_right_tire, rear_left_tire, front_left_tire);
+    
+    scrapRequired = (front_left_panel + front_right_panel + rear_left_panel + rear_right_panel + windshield + front_bumper + rear_bumper +
+        bonnet + boot + driver_door + passenger_door + front_left_light + front_right_light + back_lights + rear_right_tire + front_right_tire +
+        rear_left_tire + front_left_tire) * 25;
+    return scrapRequired;
 }
 
 /*
@@ -482,6 +535,9 @@ CreateScavArea(Float:scavPosX, Float:scavPosY, Float:scavPosZ, scavIntWorld, sca
     return 1;
 }
 
+/*
+* Punishment for dying
+*/
 ReducePlayerInventoryAndExp(playerid)
 {
     // EXP reduction (both human and zombie)
@@ -520,7 +576,7 @@ ReducePlayerInventoryAndExp(playerid)
     // Human messages
     new humanMessages[][] = {
         "You regain consciousness. You feel weakened and your backpack feels lighter.",
-        "You wake up gasping, everything aches — something's missing.",
+        "You wake up gasping, everything aches - something's missing.",
         "You stumble back to your feet, disoriented. Some of your supplies are gone.",
         "Your vision swims. You're alive, but not unscathed.",
         "Pain brings you back. Cold sweat. Lighter load."
