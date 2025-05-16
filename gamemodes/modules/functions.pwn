@@ -585,3 +585,274 @@ ReducePlayerInventoryAndExp(playerid)
     new hmsg = random(sizeof(humanMessages));
     SendClientMessage(playerid, COLOR_RP_PURPLE, humanMessages[hmsg]);
 }
+
+/*
+* Search command logic
+*/
+OnPlayerSearchNode(playerid)
+{
+    new string[128], itemIdFound, amountFound;
+    
+    for(new i = 1; i <= scavAreaCount; i++)
+    {
+        if(IsPlayerInRangeOfPoint(playerid, 1.0, scavArea[i][scavPos][0], scavArea[i][scavPos][1], scavArea[i][scavPos][2]))
+        {
+            if(!scavArea[i][areaActive])
+                return SendClientMessage(playerid, COLOR_RED, "This location is not currently active.");
+
+            switch(scavArea[i][scavType])
+            {
+                case SCAV_AREA_SCRAP:
+                {
+                    ClearAnimations(playerid);
+	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
+
+                    itemIdFound = lootTableScrap[random(CHANCE)];
+                    if(itemIdFound != INVALID_ITEM) // item found
+                    {
+                        amountFound = random(30) + 1;
+                        playerInventory[playerid][itemIdFound] = playerInventory[playerid][itemIdFound] + amountFound;
+
+                        if(amountFound <= 1)
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNameSingular]);
+                        }
+                        else
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNamePlural]);
+                        }
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, string);
+
+                        UpdatePlayerInventoryEntry(playerid, itemIdFound, player[playerid][chosenChar]);
+                    }
+                    else
+                    {
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, "You search the area and cannot find anything of use.");
+                    }
+                }
+                case SCAV_AREA_BODY:
+                {
+                    ClearAnimations(playerid);
+	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
+
+                    itemIdFound = lootTableBody[random(CHANCE)];
+                    new scrapItemId = ReturnItemIdByName("Scrap");
+                    new moneyItemId = ReturnItemIdByName("Money");
+                    if(itemIdFound != INVALID_ITEM) // item found
+                    {
+                        if(itemIdFound == scrapItemId || itemIdFound == moneyItemId)
+                        {
+                            amountFound = random(25) + 1; // 1 - 25
+                        }
+                        else
+                        {
+                            amountFound = 1;
+                        }
+                        playerInventory[playerid][itemIdFound] = playerInventory[playerid][itemIdFound] + amountFound;
+                        
+                        if(amountFound <= 1)
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNameSingular]);
+                        }
+                        else
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNamePlural]);
+                        }
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, string);
+
+                        UpdatePlayerInventoryEntry(playerid, itemIdFound, player[playerid][chosenChar]);
+                    }
+                    else
+                    {
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, "You search the area and cannot find anything of use.");
+                    }
+                }
+                case SCAV_AREA_WEAPONS:
+                {
+                    ClearAnimations(playerid);
+	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
+
+                    itemIdFound = lootTableWeapons[random(CHANCE)];
+                    if(itemIdFound != INVALID_ITEM) // item found
+                    {
+                        if(inventoryItems[itemIdFound][itemCategory] == CATEGORY_WEAPONS)
+                        {
+                            amountFound = 1;
+                        }
+                        else if(inventoryItems[itemIdFound][itemCategory] == CATEGORY_AMMO)
+                        {
+                            amountFound = random(30) + 1;
+                        }
+
+                        playerInventory[playerid][itemIdFound] = playerInventory[playerid][itemIdFound] + amountFound;
+                        
+                        if(amountFound <= 1)
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNameSingular]);
+                        }
+                        else
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNamePlural]);
+                        }
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, string);
+
+                        UpdatePlayerInventoryEntry(playerid, itemIdFound, player[playerid][chosenChar]);
+                    }
+                    else
+                    {
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, "You search the area and cannot find anything of use.");
+                    }
+                }
+                case SCAV_AREA_FOODDRINK:
+                {
+                    ClearAnimations(playerid);
+	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
+
+                    itemIdFound = lootTableFoodDrink[random(CHANCE)];
+                    if(itemIdFound != INVALID_ITEM) // item found
+                    {
+                        amountFound = random(3) + 1;
+                        playerInventory[playerid][itemIdFound] = playerInventory[playerid][itemIdFound] + amountFound;
+                        
+                        if(amountFound <= 1)
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNameSingular]);
+                        }
+                        else
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNamePlural]);
+                        }
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, string);
+
+                        UpdatePlayerInventoryEntry(playerid, itemIdFound, player[playerid][chosenChar]);
+                    }
+                    else
+                    {
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, "You search the area and cannot find anything of use.");
+                    }
+                }
+                case SCAV_AREA_MEDICAL:
+                {
+                    ClearAnimations(playerid);
+	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
+
+                    itemIdFound = lootTableMedical[random(CHANCE)];
+                    if(itemIdFound != INVALID_ITEM) // item found
+                    {
+                        amountFound = random(3) + 1;
+                        playerInventory[playerid][itemIdFound] = playerInventory[playerid][itemIdFound] + amountFound;
+                        
+                        if(amountFound <= 1)
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNameSingular]);
+                        }
+                        else
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNamePlural]);
+                        }
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, string);
+
+                        UpdatePlayerInventoryEntry(playerid, itemIdFound, player[playerid][chosenChar]);
+                    }
+                    else
+                    {
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, "You search the area and cannot find anything of use.");
+                    }
+                }
+                case SCAV_AREA_MONEY:
+                {
+                    ClearAnimations(playerid);
+	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
+
+                    itemIdFound = lootTableMoney[random(CHANCE)];
+                    if(itemIdFound != INVALID_ITEM) // item found
+                    {
+                        amountFound = random(150) + 1;
+                        playerInventory[playerid][itemIdFound] = playerInventory[playerid][itemIdFound] + amountFound;
+
+                        if(amountFound <= 1)
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNameSingular]);
+                        }
+                        else
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNamePlural]);
+                        }
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, string);
+
+                        UpdatePlayerInventoryEntry(playerid, itemIdFound, player[playerid][chosenChar]);
+                    }
+                    else
+                    {
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, "You search the area and cannot find anything of use.");
+                    }
+                }
+                case SCAV_AREA_GASSTATION:
+                {
+                    ClearAnimations(playerid);
+	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
+
+                    itemIdFound = lootTableGasStation[random(CHANCE)];
+                    if(itemIdFound != INVALID_ITEM) // item found
+                    {
+                        new fuelcanItemId = ReturnItemIdByName("Fuel Can");
+
+                        if(itemIdFound == fuelcanItemId)
+                        {
+                            if(playerInventory[playerid][fuelcanItemId] >= 1)
+                            {
+                                amountFound = 0;
+                                SendClientMessage(playerid, COLOR_RP_PURPLE, "You search the area and cannot find anything of use.");
+                                return 1;
+                            }
+                            else
+                            {
+                                amountFound = 1;
+                            }
+                        }
+                        else
+                        {
+                            amountFound = random(3) + 1;
+                        }
+
+                        playerInventory[playerid][itemIdFound] = playerInventory[playerid][itemIdFound] + amountFound;
+
+                        if(amountFound <= 1)
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNameSingular]);
+                        }
+                        else
+                        {
+                            format(string, sizeof(string), "You search the area and find %d %s.", amountFound, inventoryItems[itemIdFound][itemNamePlural]);
+                        }
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, string);
+
+                        UpdatePlayerInventoryEntry(playerid, itemIdFound, player[playerid][chosenChar]);
+                    }
+                    else
+                    {
+                        SendClientMessage(playerid, COLOR_RP_PURPLE, "You search the area and cannot find anything of use.");
+                    }
+                }
+            }
+            
+            /*
+            * Give the player some EXP
+            */
+            if(amountFound > 0)
+            {
+                new expEarned = random(3) + 1; // 1 - 3
+                player[playerid][exp] = player[playerid][exp] + expEarned;
+                UpdateHudElementForPlayer(playerid, HUD_INFO);
+            }
+
+            /*
+            * Set location's active to false so it cannot be searched again for X amount of time.
+            */
+            UpdateDynamic3DTextLabelText(scavTextLabel[i], COLOR_RED, "Looted");
+            scavArea[i][areaActive] = false;
+            SetTimerEx("ResetSearchZone", SEARCH_NODE_RESET_TIME, false, "d", i);
+        }
+    }
+    return 1;
+}

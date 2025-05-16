@@ -706,6 +706,13 @@ public InventoryGiveAmount(playerid, dialogid, response, listitem, string:inputt
 	}
 
 	new amount = strval(inputtext);
+    
+    if(amount < 1) // stops users entering values less than 1
+    {
+        SendClientMessage(playerid, COLOR_RED, "You cannot enter a value less than 1.");
+		Dialog_ShowCallback(playerid, using public InventoryGiveAmount<iiiis>, DIALOG_STYLE_INPUT, "Input an amount to give", "Input an amount of items you wish to give.", "Confirm", "Go Back");
+		return 1;
+    }
 
 	if(amount > playerInventory[playerid][player[playerid][chosenItemId]])
 	{
@@ -733,6 +740,13 @@ public InventoryDropAmount(playerid, dialogid, response, listitem, string:inputt
 		return Dialog_ShowCallback(playerid, using public InventoryMain<iiiis>, DIALOG_STYLE_LIST, "Select A Category", "General\nFood\nDrink\nMedical\nWeapons\nAmmo", "Select", "Close");
 
 	new amount = strval(inputtext);
+    
+    if(amount < 1) // stops users entering values less than 1
+    {
+        SendClientMessage(playerid, COLOR_RED, "You cannot enter a value less than 1.");
+		Dialog_ShowCallback(playerid, using public InventoryGiveAmount<iiiis>, DIALOG_STYLE_INPUT, "Input an amount to give", "Input an amount of items you wish to give.", "Confirm", "Go Back");
+		return 1;
+    }
 
 	if(amount > playerInventory[playerid][player[playerid][chosenItemId]])
 	{
