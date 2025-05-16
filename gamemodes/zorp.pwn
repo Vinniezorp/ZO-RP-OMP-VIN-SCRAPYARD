@@ -271,6 +271,11 @@ public OnPlayerDeath(playerid, killerid, reason)
 	KillTimer(player[playerid][fuelTimer]);
 	KillTimer(player[playerid][fillVehicleTimer]);
 	HideHudForPlayer(playerid);
+	/*
+	*testing xp Loss
+	*/
+	player[playerid][exp] *= 0.8;
+                UpdateHudElementForPlayer(playerid, HUD_INFO);
 
 	/*
 	* Set the player to spectate mode and set the timer to respawn
