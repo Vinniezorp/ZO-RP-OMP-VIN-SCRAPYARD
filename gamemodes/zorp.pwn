@@ -274,8 +274,8 @@ public OnPlayerDeath(playerid, killerid, reason)
 	/*
 	*testing xp Loss
 	*/
-	player[playerid][exp] *= 0.8;
-                UpdateHudElementForPlayer(playerid, HUD_INFO);
+	player[playerid][exp] = math_floor(player[playerid][exp]*0.8);
+    UpdateHudElementForPlayer(playerid, HUD_INFO);
 
 	/*
 	* Set the player to spectate mode and set the timer to respawn
