@@ -271,7 +271,11 @@ public OnPlayerDeath(playerid, killerid, reason)
 	KillTimer(player[playerid][fuelTimer]);
 	KillTimer(player[playerid][fillVehicleTimer]);
 	HideHudForPlayer(playerid);
+	
+	/*Reduce the xp and inv items by 20% with the exception for weapons and key items. Send on-death message*/
+	ReducePlayerInventoryAndExp(playerid);
 
+	UpdateHudElementForPlayer(playerid, HUD_INFO);
 	/*
 	* Set the player to spectate mode and set the timer to respawn
 	*/
