@@ -271,12 +271,34 @@ public OnPlayerDeath(playerid, killerid, reason)
 	KillTimer(player[playerid][fuelTimer]);
 	KillTimer(player[playerid][fillVehicleTimer]);
 	HideHudForPlayer(playerid);
-	/*
-	*testing xp Loss
-	*/
-	player[playerid][exp] = math_floor(player[playerid][exp]*0.8);
-    UpdateHudElementForPlayer(playerid, HUD_INFO);
+	
+	/*Reduce the xp and inv items by 20% with the exception for weapons and key items. */
 
+	new keysToReduce[] = {
+		-1, // -1 represents "exp"
+		1, 2, 3, 4, 7, 9,
+		10, 11, 12, 13, 14,
+		18, 19, 20, 21, 22,
+		26, 27
+	};
+
+	for (new i = 0; i < sizeof(keysToReduce); i++) {
+		if (keysToReduce[i] == -1) {
+			// Reduce EXP, make sure it doesn't go below 0
+			player[playerid][exp] = floatround(player[playerid][exp] * 0.8, floatround_floor);
+			if (player[playerid][exp] < 0) player[playerid][exp] = 0;
+		} else {
+			// Reduce item in inventory, make sure it doesn't go below 0
+			playerInventory[playerid][keysToReduce[i]] =
+				floatround(playerInventory[playerid][keysToReduce[i]] * 0.8, floatround_floor);
+
+			if (playerInventory[playerid][keysToReduce[i]] < 0)
+				playerInventory[playerid][keysToReduce[i]] = 0;
+		}
+	}
+
+
+	UpdateHudElementForPlayer(playerid, HUD_INFO);
 	/*
 	* Set the player to spectate mode and set the timer to respawn
 	*/
