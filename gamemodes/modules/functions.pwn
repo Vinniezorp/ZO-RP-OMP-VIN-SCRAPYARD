@@ -481,3 +481,51 @@ CreateScavArea(Float:scavPosX, Float:scavPosY, Float:scavPosZ, scavIntWorld, sca
         .testlos = 1, .worldid = scavVirWorld, .interiorid = scavIntWorld);
     return 1;
 }
+
+ReducePlayerInventoryAndExp(playerid)
+{
+    // EXP reduction (both human and zombie)
+    player[playerid][exp] = floatround(player[playerid][exp] * 0.8, floatround_floor);
+
+    // Zombie check
+    if (player[playerid][iszombie] == 1)
+    {
+        new zombieMessages[][] = {
+            "You jolt back to unlife. Hunger gnaws at what's left of you.",
+            "Your corpse stirs. There's no pain. Only hunger.",
+            "The rot deepens. Your limbs twitch with borrowed strength.",
+            "Your vision returns in a haze of red. Something inside you screams for flesh.",
+            "Death spits you back out. Again."
+        };
+
+        new zmsg = random(sizeof(zombieMessages));
+        SendClientMessage(playerid, COLOR_RP_PURPLE, zombieMessages[zmsg]);
+        return;
+    }
+
+    // Human: reduce inventory
+    new keysToReduce[] = {
+        1, 2, 3, 4, 7, 9,
+        10, 11, 12, 13, 14,
+        18, 19, 20, 21, 22,
+        26, 27
+    };
+
+    for (new i = 0; i < sizeof(keysToReduce); i++)
+    {
+        new slot = keysToReduce[i];
+        playerInventory[playerid][slot] = floatround(playerInventory[playerid][slot] * 0.8, floatround_floor);
+    }
+
+    // Human messages
+    new humanMessages[][] = {
+        "You regain consciousness. You feel weakened and your backpack feels lighter.",
+        "You wake up gasping, everything aches — something's missing.",
+        "You stumble back to your feet, disoriented. Some of your supplies are gone.",
+        "Your vision swims. You're alive, but not unscathed.",
+        "Pain brings you back. Cold sweat. Lighter load."
+    };
+
+    new hmsg = random(sizeof(humanMessages));
+    SendClientMessage(playerid, COLOR_RP_PURPLE, humanMessages[hmsg]);
+}
