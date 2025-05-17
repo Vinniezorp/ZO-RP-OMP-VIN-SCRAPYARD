@@ -6,6 +6,7 @@
 #define SAMP_CONST_CORRECT
 #define NO_TAGS
 #define CGEN_MEMORY 20000
+#define WC_CUSTOM_VENDING_MACHINES false // should disable vending machines
 
 /*
 * Max ColAndreas Objects
@@ -44,9 +45,10 @@
 #define DEFAULT_POS_A 357.1140
 
 /*
-* Server maps directory
+* Server Directories
 */
 #define MAP_DIRECTORY "scriptfiles/maps/" // MTA .map files are loaded from this directory
+#define INVENTORY_FILEPATH "character_inventory/%s.ini"
 
 /*
 * Colours (0xRRGGBBAA)
@@ -106,7 +108,7 @@
 /*
 * Maximum Interiors, lockers etc
 */
-#define MAX_SERVER_INTERIORS 2000 // increase if required
+#define MAX_SERVER_INTERIORS 500 // increase if required
 #define INTERIOR_ENTER_EXIT_RANGE 2.0
 #define MAX_LOCKERS 1
 
@@ -130,7 +132,7 @@
 /*
 * Inventory, Looting, Vendors
 */
-#define MAX_ITEMS 30
+#define MAX_ITEMS 1000 // increase as needed
 #define INVALID_ITEM 0
 #define MAX_SCAV_AREAS 5000 // increase if required.
 #define INV_CATEGORY_UNKNOWN -1

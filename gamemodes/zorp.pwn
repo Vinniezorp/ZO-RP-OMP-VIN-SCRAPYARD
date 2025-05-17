@@ -19,6 +19,7 @@
 */
 #include <YSI_Visual\y_commands>
 #include <YSI_Visual\y_dialog>
+#include <YSI_Storage\y_ini>
 
 /*
 * Other Libraries
@@ -71,8 +72,10 @@ main()
     SendRconCommand("website "SERVER_WEBSITE);
     SendRconCommand("password "SERVER_PASSWORD);
 
+    print("-------------------------------------");
     printf(""SERVER_NAME" ("SERVER_VERSION"), has been loaded successfully.");
     print("Zombie Outbreak Roleplay by the Zombie Outbreak Roleplay Contributors");
+    print("-------------------------------------");
 }
 
 public OnGameModeInit()
@@ -93,53 +96,49 @@ public OnGameModeInit()
     SetDamageFeed(false);
 
 	/*
-	* Get Interior count
-	*/
-	new DBResult:Result;
-    Result = DB_ExecuteQuery(database, "SELECT COUNT(*) FROM interiors");
-	serverInteriorCount = DB_GetFieldInt(Result);
-	DB_FreeResultSet(Result);
-    
-    /*
-    * Get scav area count
+    * Get certain stats from the database
     */
-    Result = DB_ExecuteQuery(database, "SELECT COUNT(*) FROM scavareas");
-    scavAreaCount = DB_GetFieldInt(Result);
-    DB_FreeResultSet(Result);
+    GetServerLoadStats();
 
 	/*
     * Parse MTA Maps
-    * This loads all map objects, vehicles and NPCs, and Interior data
+    * This loads all map objects and vehicles
     */
     ParseMapFiles();
 
+    /*
+    * Now load all of the other server data such as interiors, factions, items etc.
+    */
+    print("-------------------------------------");
+    new timeMs = GetTickCount();
 	for(new i = 0; i < MAX_SERVER_INTERIORS; i++)
     {
 		LoadInteriorData(i);
 	}
+    printf("|-> Interiors Loaded: %d/%d (%d ms)", serverInteriorCount, MAX_SERVER_INTERIORS, GetTickCount() - timeMs);
 
-	/*
-	* Load all the saved factions
-	*/
+    timeMs = GetTickCount();
 	for(new i = 0; i < MAX_FACTIONS; i++)
 	{
 		LoadFactionData(i);
 	}
-
-    /*
-    * Load global 3D text labels
-    */
-    for(new i = 0; i < MAX_LOCKERS; i++)
-    {
-        CreateDynamic3DTextLabel("/locker", COLOR_GREEN, lockerLocation[i][0], lockerLocation[i][1], lockerLocation[i][2], 20.0, 
-            .testlos = 1, .worldid = lockerVirWorld[i], .interiorid = lockerInterior[i]);
-    }
-
-    for(new i = 1; i <= scavAreaCount; i++)
+    printf("|-> Factions Loaded: %d/%d (%d ms)", serverFactionCount, MAX_FACTIONS, GetTickCount() - timeMs);
+    
+    timeMs = GetTickCount();
+    for(new i = 0; i < MAX_SCAV_AREAS; i++)
     {
         LoadScavArea(i);
     }
-
+    printf("|-> Scav Areas Loaded: %d/%d (%d ms)", scavAreaCount, MAX_SCAV_AREAS, GetTickCount() - timeMs);
+    
+    timeMs = GetTickCount();
+    for(new i = 0; i < MAX_ITEMS; i++)
+    {
+        LoadServerItems(i);
+    }
+    printf("|-> Items Loaded: %d/%d (%d ms)", serverItemCount, MAX_ITEMS, GetTickCount() - timeMs);
+    print("-------------------------------------");
+    
 	/*
 	* Server Textdraws
 	*/

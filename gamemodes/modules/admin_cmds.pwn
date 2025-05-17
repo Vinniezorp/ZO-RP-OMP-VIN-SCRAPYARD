@@ -552,6 +552,15 @@
     return 1;
 }
 
+@cmd() createitem(playerid, params[], help)
+{
+    if(player[playerid][admin] < 5)
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
+    
+    Dialog_ShowCallback(playerid, using public CreateItemSName<iiiis>, DIALOG_STYLE_INPUT, "Create Item: Name (Singular)", "Enter the item's singular name.", "Confirm", "Back");
+    return 1;
+}
+
 /*
 * TEST COMMAND TO BE REMOVED ONCE IT'S EASIER TO SURVIVE
 */
