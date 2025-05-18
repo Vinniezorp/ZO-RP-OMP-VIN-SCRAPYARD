@@ -132,7 +132,7 @@
 /*
 * Inventory, Looting, Vendors
 */
-#define MAX_ITEMS 1000 // increase as needed
+#define MAX_ITEMS 150 // increase as needed
 #define INVALID_ITEM 0
 #define MAX_SCAV_AREAS 5000 // increase if required.
 #define INV_CATEGORY_UNKNOWN -1
@@ -147,9 +147,11 @@
 #define DEFAULT_HEALAMOUNT -1
 #define DEFAULT_AMMO -1
 #define SEARCH_NODE_RESET_TIME 300000 // 5 minutes (in ms)
+#define MAX_LOOT_TABLES 50
 
 /*
 * Scavenging area types
+* Loot Table ID also use the same IDs
 */
 #define SCAV_AREA_SCRAP 0
 #define SCAV_AREA_WEAPONS 1 // includes ammo
