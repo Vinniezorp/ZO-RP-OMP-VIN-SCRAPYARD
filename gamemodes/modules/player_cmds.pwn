@@ -6,7 +6,7 @@
 
 @cmd() commands(playerid, params[], help)
 {
-    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/changepass /menu /inv /search /purchaseproperty /myproperties /faction /finvite /facceptinvite /fdenyinvite");
+    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/changepass /menu /inv /search /purchaseproperty /myproperties /faction /finvite /facceptinvite /fdenyinvite /skills");
     SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/s /me /do /b /g");
     return 1;
 }
@@ -719,3 +719,13 @@
  	}
 	return 1;
 }
+//skilltests
+@cmd() skills(playerid, params[], help)
+{
+    static const skillList[] = 
+        "HP Increase\nJump\nUnarmed Damage\nWall Climb\nBite\nCombust\nStun\nGrab\nBorrowed Strength\nBorrowed Speed\nCornered";
+
+    Dialog_ShowCallback(playerid, using public SkillsMenu<iiiis>, DIALOG_STYLE_LIST, "Skills Menu", skillList, "Select", "Close");
+    return 1;
+}
+//skilltests

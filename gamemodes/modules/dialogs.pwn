@@ -52,6 +52,43 @@ forward CreateItemWepSlot(playerid, dialogid, response, listitem, string:inputte
 forward CreateItemIsUsable(playerid, dialogid, response, listitem, string:inputtext[]);
 forward CreateItemMaxResource(playerid, dialogid, response, listitem, string:inputtext[]);
 
+//skilltests
+forward SkillsMenu(playerid, dialogid, response, listitem, string:inputtext[]);
+public SkillsMenu(playerid, dialogid, response, listitem, string:inputtext[])
+{
+    if(!response)
+        return 1;
+
+    static const skillNames[][] = {
+        "HP Increase",
+        "Jump",
+        "Unarmed Damage",
+        "Wall Climb",
+        "Bite",
+        "Combust",
+        "Stun",
+        "Grab",
+        "Borrowed Strength",
+        "Borrowed Speed",
+        "Cornered"
+    };
+
+    if(listitem >= 0 && listitem < sizeof(skillNames))
+    {
+        new skillName[32];
+        format(skillName, sizeof(skillName), "%s", skillNames[listitem]);
+        SendClientMessage(playerid, COLOR_SYSTEM, "You selected skill: %s", skillName);
+        // Add your skill logic here
+    }
+    else
+    {
+        SendClientMessage(playerid, COLOR_SYSTEM, "Invalid selection.");
+    }
+
+    return 1;
+}
+//skilltests
+
 /*
 * Dialog Callbacks
 */
