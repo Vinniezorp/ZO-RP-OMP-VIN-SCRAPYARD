@@ -352,6 +352,9 @@ public InventoryGeneralOpts(playerid, dialogid, response, listitem, string:input
 				playerInventory[playerid][player[playerid][chosenItemId]] = playerInventory[playerid][player[playerid][chosenItemId]] - 1;
 				playerInventory[playerid][dirtyWaterCanteenId] = playerInventory[playerid][dirtyWaterCanteenId] - 1;
 				playerInventory[playerid][waterCanteenId] = playerInventory[playerid][waterCanteenId] + 1;
+                UpdateCharacterInventoryEntry(playerid, playerInventory[playerid][player[playerid][chosenItemId]]);
+                UpdateCharacterInventoryEntry(playerid, playerInventory[playerid][dirtyWaterCanteenId]);
+                UpdateCharacterInventoryEntry(playerid, playerInventory[playerid][waterCanteenId]);
 
 				SendClientMessage(playerid, COLOR_GREEN, "You have used a purification tablet on some dirty water and have gained 1 clean canteen of water.");
 				SendProxMessage(playerid, COLOR_RP_PURPLE, 30.0, PROXY_MSG_TYPE_OTHER, "puts a purification tablet into a water canteen.");
@@ -1413,6 +1416,8 @@ public OnModelSelectionResponse(playerid, extraid, index, modelid, response)
 					player[playerid][ID], player[playerid][chosenChar], player[playerid][age], player[playerid][description], player[playerid][skin], 
 					player[playerid][iszombie]
 				);
+                
+                CreateCharacterInventory(playerid);
 			}
 			else
 			{

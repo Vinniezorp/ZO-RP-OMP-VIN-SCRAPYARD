@@ -552,7 +552,7 @@ OnPlayerSearchNode(playerid)
                     ClearAnimations(playerid);
 	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
 
-                    itemIdFound = lootTableScrap[random(CHANCE)];
+                    itemIdFound = lootTable[SCAV_AREA_SCRAP][random(CHANCE)];
                     if(itemIdFound != INVALID_ITEM) // item found
                     {
                         amountFound = random(30) + 1;
@@ -580,7 +580,7 @@ OnPlayerSearchNode(playerid)
                     ClearAnimations(playerid);
 	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
 
-                    itemIdFound = lootTableBody[random(CHANCE)];
+                    itemIdFound = lootTable[SCAV_AREA_BODY][random(CHANCE)];
                     new scrapItemId = ReturnItemIdByName("Scrap");
                     new moneyItemId = ReturnItemIdByName("Money");
                     if(itemIdFound != INVALID_ITEM) // item found
@@ -617,7 +617,7 @@ OnPlayerSearchNode(playerid)
                     ClearAnimations(playerid);
 	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
 
-                    itemIdFound = lootTableWeapons[random(CHANCE)];
+                    itemIdFound = lootTable[SCAV_AREA_WEAPONS][random(CHANCE)];
                     if(itemIdFound != INVALID_ITEM) // item found
                     {
                         if(inventoryItems[itemIdFound][itemCategory] == CATEGORY_WEAPONS)
@@ -653,7 +653,7 @@ OnPlayerSearchNode(playerid)
                     ClearAnimations(playerid);
 	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
 
-                    itemIdFound = lootTableFoodDrink[random(CHANCE)];
+                    itemIdFound = lootTable[SCAV_AREA_FOODDRINK][random(CHANCE)];
                     if(itemIdFound != INVALID_ITEM) // item found
                     {
                         amountFound = random(3) + 1;
@@ -681,7 +681,7 @@ OnPlayerSearchNode(playerid)
                     ClearAnimations(playerid);
 	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
 
-                    itemIdFound = lootTableMedical[random(CHANCE)];
+                    itemIdFound = lootTable[SCAV_AREA_MEDICAL][random(CHANCE)];
                     if(itemIdFound != INVALID_ITEM) // item found
                     {
                         amountFound = random(3) + 1;
@@ -709,7 +709,7 @@ OnPlayerSearchNode(playerid)
                     ClearAnimations(playerid);
 	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
 
-                    itemIdFound = lootTableMoney[random(CHANCE)];
+                    itemIdFound = lootTable[SCAV_AREA_MONEY][random(CHANCE)];
                     if(itemIdFound != INVALID_ITEM) // item found
                     {
                         amountFound = random(150) + 1;
@@ -737,7 +737,7 @@ OnPlayerSearchNode(playerid)
                     ClearAnimations(playerid);
 	                OnePlayAnim(playerid, "BOMBER", "BOM_Plant", 3.0, 0, 0, 0, 0, 0);
 
-                    itemIdFound = lootTableGasStation[random(CHANCE)];
+                    itemIdFound = lootTable[SCAV_AREA_GASSTATION][random(CHANCE)];
                     if(itemIdFound != INVALID_ITEM) // item found
                     {
                         new fuelcanItemId = ReturnItemIdByName("Fuel Can");
@@ -799,60 +799,5 @@ OnPlayerSearchNode(playerid)
             SetTimerEx("ResetSearchZone", SEARCH_NODE_RESET_TIME, false, "d", i);
         }
     }
-    return 1;
-}
-
-/*
-* Player's inventory storage
-* Using strReplace as INI keys cannot contain spaces
-* so we need to convert the spaces to _ when writing to the file
-* and back to a space when reading and setting the data to the player
-*/
-GetPlayerInventoryPath(playerid)
-{
-    new invPath[128];
-    format(invPath, sizeof(invPath), INVENTORY_FILEPATH, player[playerid][chosenChar]);
-    return invPath;
-}
-
-forward LoadCharacterInventory(playerid, const name[], const value[]);
-public LoadCharacterInventory(playerid, const name[], const value[])
-{
-    new fileItemName[128];
-    for(new i = 1; i < MAX_ITEMS; i++) // skip invalid item (id 0) as it is not requied to be read/written
-    {
-        format(fileItemName, sizeof(fileItemName), "Item_%d", i);
-        INI_Int(fileItemName, playerInventory[playerid][i]);
-    }
-    return 1;
-}
-
-CreateCharacterInventory(playerid)
-{
-    new timeMs = GetTickCount();
-    new INI:File = INI_Open(GetPlayerInventoryPath(playerid));
-    new fileItemName[128];
-    for(new i = 1; i < MAX_ITEMS; i++) // skip invalid item (id 0) as it is not requied to be read/written
-    {
-        format(fileItemName, sizeof(fileItemName), "Item_%d", i);
-        INI_WriteInt(File, fileItemName, 0);
-    }
-    INI_Close(File);
-    printf("|-> %s Inventory Created in %d ms", player[playerid][chosenChar], GetTickCount() - timeMs);
-    return 1;
-}
-
-SaveCharacterInventory(playerid)
-{
-    new timeMs = GetTickCount();
-    new INI:File = INI_Open(GetPlayerInventoryPath(playerid));
-    new fileItemName[128];
-    for(new i = 1; i < MAX_ITEMS; i++) // skip invalid item (id 0) as it is not requied to be read/written
-    {
-        format(fileItemName, sizeof(fileItemName), "Item_%d", i);
-        INI_WriteInt(File, fileItemName, playerInventory[playerid][i]);
-    }
-    INI_Close(File);
-    printf("|-> %s Inventory Saved in %d ms", player[playerid][chosenChar], GetTickCount() - timeMs);
     return 1;
 }

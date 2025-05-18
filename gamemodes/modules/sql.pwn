@@ -219,16 +219,7 @@ OnPlayerCharacterDataLoaded(playerid)
         */
         if(player[playerid][iszombie] == 0)
         {
-            if(fexist(GetPlayerInventoryPath(playerid))) // exists
-            {
-                new timeMs = GetTickCount();
-                INI_ParseFile(GetPlayerInventoryPath(playerid), "LoadCharacterInventory", .bExtra = true, .extra = playerid);
-                printf("|-> %s Inventory Loaded in %d ms", player[playerid][chosenChar], GetTickCount() - timeMs);
-            }
-            else // doesn't exist
-            {
-                CreateCharacterInventory(playerid);
-            }
+            LoadCharacterInventory(playerid);
         }
 
 		/*
@@ -312,15 +303,6 @@ SavePlayerCharacter(playerid, const currentCharacter[])
 	player[playerid][maxThirst], player[playerid][disease], player[playerid][maxDisease], player[playerid][spawned], player[playerid][pPos][0], 
 	player[playerid][pPos][1], player[playerid][pPos][2], player[playerid][pPos][3], player[playerid][plrinterior], player[playerid][world], player[playerid][level], 
 	player[playerid][exp], player[playerid][perkPoints], player[playerid][plrFaction], player[playerid][factionrank], playerInventoryResource[playerid][28], currentCharacter);
-    
-    /*
-    * Save their inventory
-    * As long as the character is not a Zombie
-    */
-    if(player[playerid][iszombie] == 0)
-    {
-        SaveCharacterInventory(playerid);
-    }
 
 	/*
 	* Kill the timers
@@ -492,7 +474,7 @@ CreateScavArea(Float:scavPosX, Float:scavPosY, Float:scavPosZ, scavIntWorld, sca
     DB_ExecuteQuery(database, "INSERT INTO scavareas (posx, posy, posz, interior, world, type) \
         VALUES ('%f', '%f', '%f', '%d', '%d', '%d')", scavPosX, scavPosY, scavPosZ, scavIntWorld, scavVirWorld, areaType);
 
-    // get the ID of the 
+    // get the ID of the scav area
     Result = DB_ExecuteQuery(database, "SELECT last_insert_rowid() FROM scavareas");
     tmpScavId = DB_GetFieldInt(Result);
     DB_FreeResultSet(Result);
@@ -551,7 +533,7 @@ LoadServerItems(item)
 CreateServerItem(itemid, const nameSingular[], const namePlural[], const itemDesc[], category, healamount, wepid, ammoid, wepslot, bool:isusable, maxresource)
 {
     DB_ExecuteQuery(database, "INSERT INTO items (itemid, sname, pname, description, category, healamount, wepid, ammoid, wepslot, isusable, maxresource) \
-        VALUES ('%d', '%s', '%s', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d')", itemid, nameSingular, namePlural, itemDesc, category, healamount, 
+        VALUES ('%d', '%q', '%q', '%q', '%d', '%d', '%d', '%d', '%d', '%d', '%d')", itemid, nameSingular, namePlural, itemDesc, category, healamount, 
         wepid, ammoid, wepslot, isusable, maxresource);
 
     // update the array size
@@ -560,14 +542,99 @@ CreateServerItem(itemid, const nameSingular[], const namePlural[], const itemDes
 }
 
 /*
+* Loot Tables
+*/
+CreateServerLootTable(const tableName[])
+{
+    DB_ExecuteQuery(database, "INSERT INTO loottable (name, tableid) VALUES ('%q', '%d')", tableName, lootTableCount);
+
+    // update the array size
+    lootTableCount = lootTableCount + 1;
+    return 1;
+}
+
+LoadServerLootTable(lootTableId)
+{
+    new DBResult:Result, fieldName[10];
+    Result = DB_ExecuteQuery(database, "SELECT * FROM loottable WHERE tableid = '%d'", lootTableId);
+
+	if(DB_GetFieldCount(Result) > 0)
+    {
+        DB_GetFieldStringByName(Result, "name", lootTableName[lootTableId]);
+        for(new i = 0; i < CHANCE; i++)
+        {
+            format(fieldName, sizeof(fieldName), "chance%d", i);
+            lootTable[lootTableId][i] = DB_GetFieldIntByName(Result, fieldName);
+        }
+    }
+    DB_FreeResultSet(Result);
+    return 1;
+}
+
+UpdateLootTableEntry(lootTableId, chanceNode, itemid)
+{
+    DB_ExecuteQuery(database, "UPDATE loottable SET chance%d = '%d' WHERE tableid = '%d'", chanceNode, itemid, lootTableId);
+    return 1;
+}
+
+/*
+* Character Inventory
+*/
+CreateCharacterInventory(playerid)
+{
+    DB_ExecuteQuery(database, "INSERT INTO inventory (character) VALUES ('%q')", player[playerid][chosenChar]);
+    return 1;
+}
+
+LoadCharacterInventory(playerid)
+{
+    new DBResult:Result, fieldName[10], timeMs = GetTickCount();
+    Result = DB_ExecuteQuery(database, "SELECT * FROM inventory WHERE character = '%q'", player[playerid][chosenChar]);
+
+	if(DB_GetFieldCount(Result) > 0)
+    {
+        for(new i = 1; i < MAX_ITEMS; i++)
+        {
+            format(fieldName, sizeof(fieldName), "item%d", i);
+            playerInventory[playerid][i] = DB_GetFieldIntByName(Result, fieldName);
+        }
+    }
+    DB_FreeResultSet(Result);
+    printf("|-> %s Inventory Loaded in %d ms", player[playerid][chosenChar], GetTickCount() - timeMs);
+    return 1;
+}
+
+UpdateCharacterInventoryEntry(playerid, itemid)
+{
+    DB_ExecuteQuery(database, "UPDATE characters SET item%d = '%d' WHERE character = '%q'", itemid, playerInventory[playerid][itemid], player[playerid][chosenChar]);
+    return 1;
+}
+
+/*
 * Setup all of the server load stats
 */
 GetServerLoadStats()
 {
+    new DBResult:Result, tmpCount;
+    
+    /*
+    * Count Accounts & Characters
+    */
+    print("-------------------------------------");
+    Result = DB_ExecuteQuery(database, "SELECT COUNT(*) FROM accounts");
+	tmpCount = DB_GetFieldInt(Result);
+	DB_FreeResultSet(Result);
+    printf("|-> Database has %d accounts", tmpCount);
+    
+    Result = DB_ExecuteQuery(database, "SELECT COUNT(*) FROM characters");
+	tmpCount = DB_GetFieldInt(Result);
+	DB_FreeResultSet(Result);
+    printf("|-> Database has %d characters", tmpCount);
+    print("-------------------------------------");
+    
     /*
 	* Get Interior count
 	*/
-	new DBResult:Result;
     Result = DB_ExecuteQuery(database, "SELECT COUNT(*) FROM interiors");
 	serverInteriorCount = DB_GetFieldInt(Result);
 	DB_FreeResultSet(Result);
@@ -591,5 +658,12 @@ GetServerLoadStats()
     */
     Result = DB_ExecuteQuery(database, "SELECT COUNT(*) FROM items");
 	serverItemCount = DB_GetFieldInt(Result);
+	DB_FreeResultSet(Result);
+    
+    /*
+    * Get Loot Table count
+    */
+    Result = DB_ExecuteQuery(database, "SELECT COUNT(*) FROM loottable");
+	lootTableCount = DB_GetFieldInt(Result);
 	DB_FreeResultSet(Result);
 }
