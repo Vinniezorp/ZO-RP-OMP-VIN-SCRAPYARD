@@ -6,7 +6,7 @@
 
 @cmd() commands(playerid, params[], help)
 {
-    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/changepass /menu /inv /search /purchaseproperty /myproperties /faction /finvite /facceptinvite /fdenyinvite /skills");
+    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/changepass /menu /inv /search /purchaseproperty /myproperties /faction /finvite /facceptinvite /fdenyinvite /perks");
     SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/s /me /do /b /g");
     return 1;
 }
@@ -720,7 +720,7 @@
 	return 1;
 }
 //skilltests
-@cmd() skills(playerid, params[], help)
+@cmd() perks(playerid, params[], help)
 {
     if(player[playerid][iszombie] == 1)
     {
@@ -728,12 +728,12 @@
         static const skillList[] = 
             "HP Increase\nJump\nUnarmed Damage\nWall Climb\nBite\nCombust\nStun\nGrab\nBorrowed Strength\nBorrowed Speed\nCornered";
 
-        Dialog_ShowCallback(playerid, using public SkillsMenu<iiiis>, DIALOG_STYLE_LIST, "Zombie Skills", skillList, "Select", "Close");
+        Dialog_ShowCallback(playerid, using public PerkMenu<iiiis>, DIALOG_STYLE_LIST, "Zombie Perks", skillList, "Select", "Close");
     }
     else
     {
         // Show empty or placeholder skill menu for humans
-        Dialog_ShowCallback(playerid, using public SkillsMenu<iiiis>, DIALOG_STYLE_MSGBOX, "Human Skills", "No skills available for humans.", "Close", "");
+        Dialog_ShowCallback(playerid, using public PerkMenu<iiiis>, DIALOG_STYLE_MSGBOX, "Human Perks", "No Perks available for humans.", "Close", "");
     }
 
     return 1;

@@ -52,10 +52,10 @@ forward CreateItemWepSlot(playerid, dialogid, response, listitem, string:inputte
 forward CreateItemIsUsable(playerid, dialogid, response, listitem, string:inputtext[]);
 forward CreateItemMaxResource(playerid, dialogid, response, listitem, string:inputtext[]);
 
-//skilltests
-forward SkillsMenu(playerid, dialogid, response, listitem, string:inputtext[]);
+//perktests
+forward PerkMenu(playerid, dialogid, response, listitem, string:inputtext[]);
 forward SetHealth(playerid, Float:health);
-public SkillsMenu(playerid, dialogid, response, listitem, string:inputtext[])
+public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
 {
     if(!response)
         return 1;
@@ -88,7 +88,7 @@ public SkillsMenu(playerid, dialogid, response, listitem, string:inputtext[])
             // Set current health to new max health
             player[playerid][health] = player[playerid][maxHealth];
 
-            // Update the max health and health in the database ONLY for the selected character
+            // Update the max health and health in the database for the selected character
             DB_ExecuteQuery(database,
                 "UPDATE characters SET maxhealth = '%f', health = '%f' WHERE owner = '%d' AND name = '%q'",
                 player[playerid][maxHealth], player[playerid][health], player[playerid][ID], player[playerid][chosenChar]);
@@ -102,6 +102,27 @@ public SkillsMenu(playerid, dialogid, response, listitem, string:inputtext[])
 
             SendClientMessage(playerid, COLOR_GREEN, "Your max health has increased by 10%, and your current health was restored!");
         }
+		else if(listitem == 1) // Jump
+		{
+			if(player[playerid][unlockedJumpSkill])
+			{
+				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Jump skill.");
+			}
+			else
+			{
+				player[playerid][unlockedJumpSkill] = true;
+
+				// Lower gravity for higher jumps (default: 0.008, less = more jump)
+				SetPlayerGravity(playerid, 0.005); // Adjust value to fit game balance
+
+				// Save skill unlock to DB
+				DB_ExecuteQuery(database,
+					"UPDATE characters SET unlockedjump = '1' WHERE owner = '%d' AND name = '%q'",
+					player[playerid][ID], player[playerid][chosenChar]);
+
+				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the Jump skill! You can now jump higher.");
+			}
+		}
         else
         {
             // Placeholder for other skill logic

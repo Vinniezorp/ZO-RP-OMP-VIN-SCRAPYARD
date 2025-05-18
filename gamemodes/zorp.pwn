@@ -244,20 +244,30 @@ public OnPlayerDisconnect(playerid, reason)
 
 public OnPlayerSpawn(playerid)
 {
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL_SILENCED, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_DESERT_EAGLE, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_SHOTGUN, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_SAWNOFF_SHOTGUN, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_SPAS12_SHOTGUN, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_MICRO_UZI, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_MP5, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_AK47, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_M4, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_SNIPERRIFLE, 1);
-	return 1;
-}
+	//Check and correct gravity
+	if (player[playerid][unlockedJumpSkill])
+	{
+		SetPlayerGravity(playerid, 0.005);
+	}
+	else
+	{
+		SetPlayerGravity(playerid, 0.008);
+	}
+    // Set basic weapon skills to 1
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL_SILENCED, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_DESERT_EAGLE, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_SHOTGUN, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_SAWNOFF_SHOTGUN, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_SPAS12_SHOTGUN, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_MICRO_UZI, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_MP5, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_AK47, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_M4, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_SNIPERRIFLE, 1);
 
+    return 1;
+}
 public OnPlayerDeath(playerid, killerid, reason)
 {
 	/*
