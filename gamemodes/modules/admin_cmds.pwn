@@ -574,13 +574,13 @@
     CreateServerLootTable(tmpTableName);
     return 1;
 }
-
+/*
 @cmd loottables(playerid, params[], help)
 {
 
     return 1;
 }
-
+*/
 /*
 * TEST COMMAND TO BE REMOVED ONCE IT'S EASIER TO SURVIVE
 */
