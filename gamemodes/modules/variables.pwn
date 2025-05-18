@@ -287,7 +287,6 @@ enum inventoryItemData
 new inventoryItems[MAX_ITEMS][inventoryItemData];
 new playerInventory[MAX_PLAYERS][MAX_ITEMS];
 new playerInventoryResource[MAX_PLAYERS][MAX_ITEMS];
-//new lockerInventory[MAX_PLAYERS][MAX_ITEMS];
 
 /*
 * Scavenging Locations
@@ -393,6 +392,10 @@ new Float:fuelPump[MAX_FUEL_PUMPS][3] =
 * 0 for no item
 * 1+ for an item
 */
+new lootTableCount = 0;
+new lootTableName[MAX_LOOT_TABLES][32];
+new lootTable[MAX_LOOT_TABLES][CHANCE];
+/*
 new lootTableScrap[CHANCE] =
 {
     1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
@@ -490,7 +493,7 @@ new lootTableGasStation[CHANCE] =
     1, 4, 28, 21, 20, 0, 0, 0, 0, 0,
     1, 4, 28, 21, 20, 0, 0, 0, 0, 0
 };
-
+*/
 /*
 * Random Spawns
 */

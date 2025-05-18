@@ -36,7 +36,7 @@
             SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/aban");
             SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/ipban");
             SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/rconbanip /unbanip /dsetpw");
-            SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/fly /createinterior /icis /setintvirworld /showinteriors /cancelinterior /scavcreate");
+            SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "/fly /createinterior /icis /setintvirworld /showinteriors /cancelinterior /scavcreate /createloottable");
         }
     }
     return 1;
@@ -558,6 +558,26 @@
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
     
     Dialog_ShowCallback(playerid, using public CreateItemSName<iiiis>, DIALOG_STYLE_INPUT, "Create Item: Name (Singular)", "Enter the item's singular name.", "Confirm", "Back");
+    return 1;
+}
+
+@cmd() createloottable(playerid, params[], help)
+{
+    new tmpTableName[32];
+    
+    if(player[playerid][admin] < 5)
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
+    
+    if(sscanf(params, "s[32]", tmpTableName)) 
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Syntax error. Correct usage: /createloottable [name]");
+    
+    CreateServerLootTable(tmpTableName);
+    return 1;
+}
+
+@cmd loottables(playerid, params[], help)
+{
+
     return 1;
 }
 

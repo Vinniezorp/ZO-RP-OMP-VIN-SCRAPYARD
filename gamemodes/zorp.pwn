@@ -19,7 +19,6 @@
 */
 #include <YSI_Visual\y_commands>
 #include <YSI_Visual\y_dialog>
-#include <YSI_Storage\y_ini>
 
 /*
 * Other Libraries
@@ -143,6 +142,13 @@ public OnGameModeInit()
         LoadServerItems(i);
     }
     printf("|-> Items Loaded: %d/%d (%d ms)", serverItemCount, MAX_ITEMS, GetTickCount() - timeMs);
+    
+    timeMs = GetTickCount();
+    for(new i = 0; i < MAX_LOOT_TABLES; i++)
+    {
+        LoadServerLootTable(i);
+    }
+    printf("|-> Loot Tables Loaded: %d/%d (%d ms)", lootTableCount, MAX_LOOT_TABLES, GetTickCount() - timeMs);
     print("-------------------------------------");
     
 	/*
