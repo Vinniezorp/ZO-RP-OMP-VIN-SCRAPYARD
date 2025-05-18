@@ -722,10 +722,20 @@
 //skilltests
 @cmd() skills(playerid, params[], help)
 {
-    static const skillList[] = 
-        "HP Increase\nJump\nUnarmed Damage\nWall Climb\nBite\nCombust\nStun\nGrab\nBorrowed Strength\nBorrowed Speed\nCornered";
+    if(player[playerid][iszombie] == 1)
+    {
+        // Show zombie skill menu
+        static const skillList[] = 
+            "HP Increase\nJump\nUnarmed Damage\nWall Climb\nBite\nCombust\nStun\nGrab\nBorrowed Strength\nBorrowed Speed\nCornered";
 
-    Dialog_ShowCallback(playerid, using public SkillsMenu<iiiis>, DIALOG_STYLE_LIST, "Skills Menu", skillList, "Select", "Close");
+        Dialog_ShowCallback(playerid, using public SkillsMenu<iiiis>, DIALOG_STYLE_LIST, "Zombie Skills", skillList, "Select", "Close");
+    }
+    else
+    {
+        // Show empty or placeholder skill menu for humans
+        Dialog_ShowCallback(playerid, using public SkillsMenu<iiiis>, DIALOG_STYLE_MSGBOX, "Human Skills", "No skills available for humans.", "Close", "");
+    }
+
     return 1;
 }
 //skilltests

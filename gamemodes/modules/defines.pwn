@@ -227,3 +227,8 @@
 #define FUEL_PUMP_RANGE 25.0
 #define FILL_TYPE_FUELPUMP 0
 #define FILL_TYPE_FUELCAN 1
+
+//perktests
+#define INITIAL_MAX_HEALTH_ZED 200.0
+#define INITIAL_MAX_HEALTH_HUM 100.0
+//perktests

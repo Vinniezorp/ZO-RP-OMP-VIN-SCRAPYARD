@@ -54,6 +54,7 @@ forward CreateItemMaxResource(playerid, dialogid, response, listitem, string:inp
 
 //skilltests
 forward SkillsMenu(playerid, dialogid, response, listitem, string:inputtext[]);
+forward SetHealth(playerid, Float:health);
 public SkillsMenu(playerid, dialogid, response, listitem, string:inputtext[])
 {
     if(!response)
@@ -78,7 +79,34 @@ public SkillsMenu(playerid, dialogid, response, listitem, string:inputtext[])
         new skillName[32];
         format(skillName, sizeof(skillName), "%s", skillNames[listitem]);
         SendClientMessage(playerid, COLOR_SYSTEM, "You selected skill: %s", skillName);
-        // Add your skill logic here
+
+        if(listitem == 0) // HP Increase
+        {
+            // Increase max health by 10% of initial max health
+            player[playerid][maxHealth] += INITIAL_MAX_HEALTH_ZED * 0.10;
+
+            // Set current health to new max health
+            player[playerid][health] = player[playerid][maxHealth];
+
+            // Update the max health and health in the database ONLY for the selected character
+            DB_ExecuteQuery(database,
+                "UPDATE characters SET maxhealth = '%f', health = '%f' WHERE owner = '%d' AND name = '%q'",
+                player[playerid][maxHealth], player[playerid][health], player[playerid][ID], player[playerid][chosenChar]);
+
+            // Apply max health and current health changes in-game
+            SetPlayerMaxHealth(playerid, player[playerid][maxHealth]);
+            SetPlayerHealth(playerid, player[playerid][health]);
+
+            // Update HUD to reflect health changes
+            UpdateHudElementForPlayer(playerid, HUD_HEALTH);
+
+            SendClientMessage(playerid, COLOR_GREEN, "Your max health has increased by 10%, and your current health was restored!");
+        }
+        else
+        {
+            // Placeholder for other skill logic
+            SendClientMessage(playerid, COLOR_YELLOW, "Skill effect not implemented yet.");
+        }
     }
     else
     {
