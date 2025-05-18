@@ -34,6 +34,12 @@
 #include <colandreas>
 
 /*
+* Textdraw Streaming
+* Must be the final included library (as per https://github.com/nexquery/samp-textdraw-streamer)
+*/
+#include <textdraw-streamer>
+
+/*
 * Variables
 */
 #include "modules/variables.pwn"

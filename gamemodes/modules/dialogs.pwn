@@ -584,12 +584,10 @@ public InventoryFoodDrinkOpts(playerid, dialogid, response, listitem, string:inp
 					}
     				UpdateHudElementForPlayer(playerid, HUD_DISEASE);
 					playerInventory[playerid][emptyCanteenItem] = playerInventory[playerid][emptyCanteenItem] + 1;
-					//UpdatePlayerInventoryEntry(playerid, emptyCanteenItem, player[playerid][chosenChar]);
 				}
 				else if(player[playerid][chosenItemId] == waterCanteenItemId)
 				{
 					playerInventory[playerid][emptyCanteenItem] = playerInventory[playerid][emptyCanteenItem] + 1;
-					//UpdatePlayerInventoryEntry(playerid, emptyCanteenItem, player[playerid][chosenChar]);
 				}
 			}
 		}
