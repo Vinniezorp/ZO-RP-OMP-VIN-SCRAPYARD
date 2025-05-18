@@ -569,9 +569,47 @@ LoadServerLootTable(lootTableId)
     return 1;
 }
 
-UpdateLootTableEntry(lootTableId, chanceNode, itemid)
+UpdateLootTableEntry(const tableName[], tableid, chanceNode, itemid)
 {
-    DB_ExecuteQuery(database, "UPDATE loottable SET chance%d = '%d' WHERE tableid = '%d'", chanceNode, itemid, lootTableId);
+    DB_ExecuteQuery(database, "UPDATE loottable SET chance%d = '%d' WHERE name = '%q'", chanceNode, itemid, tableName);
+    lootTable[tableid][chanceNode] = itemid;
+    return 1;
+}
+
+PopulateLootTableList(playerid)
+{
+	new tmpTableName[32], DBResult:Result;
+	Result = DB_ExecuteQuery(database, "SELECT * FROM loottable LIMIT %d", lootTableCount);
+    
+    do
+	{
+		DB_GetFieldStringByName(Result, "name", tmpTableName, 32);
+        AddDialogListitem(playerid, tmpTableName);
+	}
+	while(DB_SelectNextRow(Result));
+    
+    DB_FreeResultSet(Result);
+    ShowPlayerDialogPages(playerid, "ShowLootTableAdminList", DIALOG_STYLE_LIST, "Select a Loot Table", "Select", "Quit", 10);
+	return 1;
+}
+
+PopulateLootTableChanceList(playerid, const chosenTable[])
+{
+    new DBResult:Result, tmpChance, fieldName[10], tmpChanceToString[5];
+	Result = DB_ExecuteQuery(database, "SELECT * FROM loottable WHERE name = '%q'", chosenTable);
+    
+    if(DB_GetFieldCount(Result) > 0)
+    {
+        for(new i = 0; i < CHANCE; i++)
+        {
+            format(fieldName, sizeof(fieldName), "chance%d", i);
+            tmpChance = DB_GetFieldIntByName(Result, fieldName);
+            format(tmpChanceToString, sizeof(tmpChanceToString), "%d", tmpChance); // AddDialogListitem only accepts strings in the 2nd param
+            AddDialogListitem(playerid, tmpChanceToString);
+        }
+    }
+    DB_FreeResultSet(Result);
+    ShowPlayerDialogPages(playerid, "ShowLootTableChanceList", DIALOG_STYLE_LIST, "Select an Item ID to edit", "Select", "Quit", 10);
     return 1;
 }
 
