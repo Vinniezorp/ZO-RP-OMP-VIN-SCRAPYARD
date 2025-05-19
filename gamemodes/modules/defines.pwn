@@ -225,7 +225,7 @@
 /*
 * Fuel
 */
-#define MAX_FUEL_PUMPS 20
-#define FUEL_PUMP_RANGE 25.0
+#define MAX_FUEL_PUMPS 100 // increase as needed
+#define FUEL_PUMP_RANGE 2.5
 #define FILL_TYPE_FUELPUMP 0
 #define FILL_TYPE_FUELCAN 1

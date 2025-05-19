@@ -501,7 +501,7 @@ CreateScavArea(Float:scavPosX, Float:scavPosY, Float:scavPosZ, scavIntWorld, sca
 LoadServerItems(item)
 {
     new DBResult:Result;
-    Result = DB_ExecuteQuery(database, "SELECT * FROM items WHERE itemid = '%d'", item);
+    Result = DB_ExecuteQuery(database, "SELECT * FROM items WHERE id = '%d'", item);
 
 	if(DB_GetFieldCount(Result) > 0)
     {
@@ -544,7 +544,7 @@ CreateServerItem(itemid, const nameSingular[], const namePlural[], const itemDes
 */
 CreateServerLootTable(const tableName[])
 {
-    DB_ExecuteQuery(database, "INSERT INTO loottable (name, tableid) VALUES ('%q', '%d')", tableName, lootTableCount);
+    DB_ExecuteQuery(database, "INSERT INTO loottable (name) VALUES ('%q')", tableName);
 
     // update the array size
     lootTableCount = lootTableCount + 1;
@@ -554,7 +554,7 @@ CreateServerLootTable(const tableName[])
 LoadServerLootTable(lootTableId)
 {
     new DBResult:Result, fieldName[10];
-    Result = DB_ExecuteQuery(database, "SELECT * FROM loottable WHERE tableid = '%d'", lootTableId);
+    Result = DB_ExecuteQuery(database, "SELECT * FROM loottable WHERE id = '%d'", lootTableId + 1);
 
 	if(DB_GetFieldCount(Result) > 0)
     {
@@ -647,6 +647,50 @@ UpdateCharacterInventoryEntry(playerid, itemid)
 }
 
 /*
+* Fuel Pumps
+*/
+CreateFuelPump(Float:fuelPosX, Float:fuelPosY, Float:fuelPosZ)
+{
+    new tmpPumpId, DBResult:Result;
+    DB_ExecuteQuery(database, "INSERT INTO fuelpump (posx, posy, posz) VALUES ('%f', '%f', '%f')", fuelPosX, fuelPosY, fuelPosZ);
+
+    // get the ID of the scav area
+    Result = DB_ExecuteQuery(database, "SELECT last_insert_rowid() FROM scavareas");
+    tmpPumpId = DB_GetFieldInt(Result) - 1;
+    DB_FreeResultSet(Result);
+
+    // update the array size
+    fuelPumpCount = fuelPumpCount + 1;
+    
+    // set the data for this new scav area
+    fuelPump[tmpPumpId][0] = fuelPosX;
+    fuelPump[tmpPumpId][1] = fuelPosY;
+    fuelPump[tmpPumpId][2] = fuelPosZ;
+    
+    // create the text label
+    fillTextLabel[tmpPumpId] = CreateDynamic3DTextLabel("/fill", COLOR_YELLOW, fuelPosX, fuelPosY, fuelPosZ, 20.0, .testlos = 1);
+    return 1;
+}
+
+LoadFuelPumps(pumpId)
+{
+    new DBResult:Result;
+    Result = DB_ExecuteQuery(database, "SELECT * FROM fuelpump WHERE id = '%d'", pumpId + 1);
+
+	if(DB_GetFieldCount(Result) > 0)
+    {
+        fuelPump[pumpId][0] = DB_GetFieldFloatByName(Result, "posx");
+        fuelPump[pumpId][1] = DB_GetFieldFloatByName(Result, "posy");
+        fuelPump[pumpId][2] = DB_GetFieldFloatByName(Result, "posz");
+    }
+    DB_FreeResultSet(Result);
+    
+    // create the text label
+    fillTextLabel[pumpId] = CreateDynamic3DTextLabel("/fill", COLOR_YELLOW, fuelPump[pumpId][0], fuelPump[pumpId][1], fuelPump[pumpId][2], 20.0, .testlos = 1);
+    return 1;
+}
+
+/*
 * Setup all of the server load stats
 */
 GetServerLoadStats()
@@ -701,5 +745,12 @@ GetServerLoadStats()
     */
     Result = DB_ExecuteQuery(database, "SELECT COUNT(*) FROM loottable");
 	lootTableCount = DB_GetFieldInt(Result);
+	DB_FreeResultSet(Result);
+    
+    /*
+    * Get Fuel Pump count
+    */
+    Result = DB_ExecuteQuery(database, "SELECT COUNT(*) FROM fuelpump");
+	fuelPumpCount = DB_GetFieldInt(Result);
 	DB_FreeResultSet(Result);
 }

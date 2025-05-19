@@ -335,6 +335,9 @@
 
     if(sscanf(params, "s[64]", intname)) 
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Syntax error. Correct usage: /createinterior [name]");
+        
+    if(serverInteriorCount >= MAX_SERVER_INTERIORS)
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_ERROR, "The server has reached its maximum amount of interiors.");
 
     if(player[playerid][createIntStep] >= 1)
     {
@@ -556,6 +559,9 @@
 {
     if(player[playerid][admin] < 5)
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
+        
+    if(serverItemCount >= MAX_ITEMS)
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_ERROR, "The server has reached its maximum amount of items.");
     
     Dialog_ShowCallback(playerid, using public CreateItemSName<iiiis>, DIALOG_STYLE_INPUT, "Create Item: Name (Singular)", "Enter the item's singular name.", "Confirm", "Back");
     return 1;
@@ -570,6 +576,9 @@
     
     if(sscanf(params, "s[32]", tmpTableName)) 
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Syntax error. Correct usage: /createloottable [name]");
+        
+    if(lootTableCount >= MAX_LOOT_TABLES)
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_ERROR, "The server has reached its maximum amount of loot tables.");
     
     CreateServerLootTable(tmpTableName);
     return 1;
@@ -581,6 +590,20 @@
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
         
     PopulateLootTableList(playerid);
+    return 1;
+}
+
+@cmd() createpump(playerid, params[], help)
+{
+    if(player[playerid][admin] < 5)
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
+        
+    if(fuelPumpCount >= MAX_FUEL_PUMPS)
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_ERROR, "The server has reached its maximum amount of fuel pumps.");
+        
+    new Float:tmpPos[3];
+    GetPlayerPos(playerid, tmpPos[0], tmpPos[1], tmpPos[2]);
+    CreateFuelPump(tmpPos[0], tmpPos[1], tmpPos[2]);
     return 1;
 }
 
