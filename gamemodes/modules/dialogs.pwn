@@ -123,6 +123,22 @@ public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
 				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the Jump skill! You can now jump higher.");
 			}
 		}
+		else if(listitem == 2) // Unarmed
+		{
+			if(player[playerid][unlockedUnarmedSkill])
+			{
+				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Unarmed skill.");
+			}
+			else
+			{
+				player[playerid][unlockedUnarmedSkill] = true;
+				DB_ExecuteQuery(database,
+					"UPDATE characters SET unlockedunarmed = '1' WHERE owner = '%d' AND name = '%q'",
+					player[playerid][ID], player[playerid][chosenChar]);
+
+				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the Unarmed Damage skill! You can now Punch harder.");
+			}
+		}
         else
         {
             // Placeholder for other skill logic

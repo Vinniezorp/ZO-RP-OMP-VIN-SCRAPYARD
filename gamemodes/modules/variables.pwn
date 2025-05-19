@@ -50,6 +50,7 @@ enum E_PLAYERS
     factionrank,
     wepSlot[13],
     bool:unlockedJumpSkill,
+    bool:unlockedUnarmedSkill,
 	/*
 	* Not Saved
 	*/
