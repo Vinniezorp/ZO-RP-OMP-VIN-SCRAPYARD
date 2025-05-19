@@ -7,7 +7,6 @@
 /*
 * Function Forwards
 */
-
 forward RegisterDialog(playerid, dialogid, response, listitem, string:inputtext[]);
 forward LoginDialog(playerid, dialogid, response, listitem, string:inputtext[]);
 forward ChangePasswordDialog(playerid, dialogid, response, listitem, string:inputtext[]);
@@ -51,6 +50,7 @@ forward CreateItemAmmoId(playerid, dialogid, response, listitem, string:inputtex
 forward CreateItemWepSlot(playerid, dialogid, response, listitem, string:inputtext[]);
 forward CreateItemIsUsable(playerid, dialogid, response, listitem, string:inputtext[]);
 forward CreateItemMaxResource(playerid, dialogid, response, listitem, string:inputtext[]);
+forward EditLootTableChanceNode(playerid, dialogid, response, listitem, string:inputtext[]);
 
 //perktests
 forward PerkMenu(playerid, dialogid, response, listitem, string:inputtext[]);
@@ -1191,6 +1191,23 @@ public EditRankName(playerid, dialogid, response, listitem, string:inputtext[])
 	return 1;
 }
 
+public EditLootTableChanceNode(playerid, dialogid, response, listitem, string:inputtext[])
+{   
+    if(!response)
+        return 1;
+        
+    if(strval(inputtext) < 0 || strval(inputtext) > MAX_ITEMS - 1)
+    {
+        SendClientMessage(playerid, COLOR_RED, "Invalid item ID. Values between 0 & %d only.", MAX_ITEMS - 1);
+        Dialog_ShowCallback(playerid, using public EditLootTableChanceNode<iiiis>, DIALOG_STYLE_INPUT, "Loot Table Chance Node", "Input a valid item ID for this node. It will then be added to the loot table.", "Confirm", "Back");
+        return 1;
+    }
+    
+    UpdateLootTableEntry(player[playerid][admChosenTableName], player[playerid][admChosenTableId], player[playerid][admChosenChanceNode], strval(inputtext));
+    PopulateLootTableList(playerid);
+    return 1;
+}
+
 /*
 * Paged Dialogs
 */
@@ -1224,8 +1241,6 @@ DialogPages:ShowPlayerCharacterMenu(playerid, response, listitem, inputtext[])
 		* For now let's spawn the player as their chosen character.
 		*/
 		OnPlayerCharacterDataLoaded(playerid);
-		//OnPlayerInventoryDataLoaded(playerid);
-		//OnPlayerLockerDataLoaded(playerid);
 	}
 	return 1;
 }
@@ -1237,6 +1252,27 @@ DialogPages:ShowFactionMemberList(playerid, response, listitem, inputtext[])
 
 	format(player[playerid][facChosenChar], MAX_PLAYER_NAME, "%s", inputtext);
 	Dialog_ShowCallback(playerid, using public EditFactionMember<iiiis>, DIALOG_STYLE_LIST, "Faction Member Options", "Set Rank\nKick", "Confirm", "Back");
+	return 1;
+}
+
+DialogPages:ShowLootTableAdminList(playerid, response, listitem, inputtext[])
+{
+	if(!response)
+		return 1;
+
+    player[playerid][admChosenTableId] = listitem;
+	format(player[playerid][admChosenTableName], 32, "%s", inputtext);
+    PopulateLootTableChanceList(playerid, player[playerid][admChosenTableName]);
+	return 1;
+}
+
+DialogPages:ShowLootTableChanceList(playerid, response, listitem, inputtext[])
+{
+	if(!response)
+		return 1;
+
+	player[playerid][admChosenChanceNode] = listitem;
+    Dialog_ShowCallback(playerid, using public EditLootTableChanceNode<iiiis>, DIALOG_STYLE_INPUT, "Loot Table Chance Node", "Input a valid item ID for this node. It will then be added to the loot table.", "Confirm", "Back");
 	return 1;
 }
 
