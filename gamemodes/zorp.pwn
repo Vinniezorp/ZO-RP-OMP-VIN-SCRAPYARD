@@ -98,7 +98,7 @@ public OnGameModeInit()
 	SetVehiclePassengerDamage(true);
     SetVehicleUnoccupiedDamage(true);
     SetDisableSyncBugs(true);
-    SetDamageFeed(false);
+    SetDamageFeed(true);
 
 	/*
     * Get certain stats from the database
@@ -299,6 +299,20 @@ public OnPlayerDeath(playerid, killerid, reason)
 	TogglePlayerSpectating(playerid, true);
 	GameTextForPlayer(playerid, "...Respawning...", 3500, 3);
 	SetTimerEx("RespawnAfterDeath", 3500, false, "d", playerid);
+	return 1;
+}
+
+
+public OnPlayerDamage(&playerid, &Float:amount, &issuerid, &WEAPON:weapon, &bodypart)
+{
+	if(weapon == 0){
+		amount=10;
+	}
+	//perks test 
+	if(weapon == 0 && player[issuerid][unlockedUnarmedSkill]){
+		amount=20;
+	}
+	//perks test
 	return 1;
 }
 
