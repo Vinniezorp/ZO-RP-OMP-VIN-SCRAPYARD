@@ -149,6 +149,13 @@ public OnGameModeInit()
         LoadServerLootTable(i);
     }
     printf("|-> Loot Tables Loaded: %d/%d (%d ms)", lootTableCount, MAX_LOOT_TABLES, GetTickCount() - timeMs);
+    
+    timeMs = GetTickCount();
+    for(new i = 0; i < MAX_FUEL_PUMPS; i++)
+    {
+        LoadFuelPumps(i);
+    }
+    printf("|-> Fuel Pumps Loaded: %d/%d (%d ms)", fuelPumpCount, MAX_FUEL_PUMPS, GetTickCount() - timeMs);
     print("-------------------------------------");
     
 	/*
