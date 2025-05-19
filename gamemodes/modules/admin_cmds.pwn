@@ -575,7 +575,7 @@
     return 1;
 }
 
-
+@cmd() loottables(playerid, params[], help)
 {
     if(player[playerid][admin] < 5)
         return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
@@ -583,7 +583,6 @@
     PopulateLootTableList(playerid);
     return 1;
 }
-*/
 /*
 * TEST COMMAND TO BE REMOVED ONCE IT'S EASIER TO SURVIVE
 */
