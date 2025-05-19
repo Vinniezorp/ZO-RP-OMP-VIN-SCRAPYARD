@@ -1,0 +1,1 @@
+Character inventory files will be written and read from this directory.

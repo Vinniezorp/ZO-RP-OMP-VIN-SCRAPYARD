@@ -98,7 +98,7 @@ public OnGameModeInit()
 	SetVehiclePassengerDamage(true);
     SetVehicleUnoccupiedDamage(true);
     SetDisableSyncBugs(true);
-    SetDamageFeed(false);
+    SetDamageFeed(true);
 
 	/*
     * Get certain stats from the database
@@ -263,20 +263,30 @@ public OnPlayerDisconnect(playerid, reason)
 
 public OnPlayerSpawn(playerid)
 {
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL_SILENCED, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_DESERT_EAGLE, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_SHOTGUN, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_SAWNOFF_SHOTGUN, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_SPAS12_SHOTGUN, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_MICRO_UZI, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_MP5, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_AK47, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_M4, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_SNIPERRIFLE, 1);
-	return 1;
-}
+	//Check and correct gravity
+	if (player[playerid][unlockedJumpSkill])
+	{
+		SetPlayerGravity(playerid, 0.005);
+	}
+	else
+	{
+		SetPlayerGravity(playerid, 0.008);
+	}
+    // Set basic weapon skills to 1
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL_SILENCED, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_DESERT_EAGLE, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_SHOTGUN, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_SAWNOFF_SHOTGUN, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_SPAS12_SHOTGUN, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_MICRO_UZI, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_MP5, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_AK47, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_M4, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_SNIPERRIFLE, 1);
 
+    return 1;
+}
 public OnPlayerDeath(playerid, killerid, reason)
 {
 	/*
@@ -296,6 +306,20 @@ public OnPlayerDeath(playerid, killerid, reason)
 	TogglePlayerSpectating(playerid, true);
 	GameTextForPlayer(playerid, "...Respawning...", 3500, 3);
 	SetTimerEx("RespawnAfterDeath", 3500, false, "d", playerid);
+	return 1;
+}
+
+
+public OnPlayerDamage(&playerid, &Float:amount, &issuerid, &WEAPON:weapon, &bodypart)
+{
+	if(weapon == 0){
+		amount=10;
+	}
+	//perks test 
+	if(weapon == 0 && player[issuerid][unlockedUnarmedSkill]){
+		amount=20;
+	}
+	//perks test
 	return 1;
 }
 

@@ -52,6 +52,108 @@ forward CreateItemIsUsable(playerid, dialogid, response, listitem, string:inputt
 forward CreateItemMaxResource(playerid, dialogid, response, listitem, string:inputtext[]);
 forward EditLootTableChanceNode(playerid, dialogid, response, listitem, string:inputtext[]);
 
+//perktests
+forward PerkMenu(playerid, dialogid, response, listitem, string:inputtext[]);
+forward SetHealth(playerid, Float:health);
+public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
+{
+    if(!response)
+        return 1;
+
+    static const skillNames[][] = {
+        "HP Increase",
+        "Jump",
+        "Unarmed Damage",
+        "Wall Climb",
+        "Bite",
+        "Combust",
+        "Stun",
+        "Grab",
+        "Borrowed Strength",
+        "Borrowed Speed",
+        "Cornered"
+    };
+
+    if(listitem >= 0 && listitem < sizeof(skillNames))
+    {
+        new skillName[32];
+        format(skillName, sizeof(skillName), "%s", skillNames[listitem]);
+        SendClientMessage(playerid, COLOR_SYSTEM, "You selected skill: %s", skillName);
+
+        if(listitem == 0) // HP Increase
+        {
+            // Increase max health by 10% of initial max health
+            player[playerid][maxHealth] += INITIAL_MAX_HEALTH_ZED * 0.10;
+
+            // Set current health to new max health
+            player[playerid][health] = player[playerid][maxHealth];
+
+            // Update the max health and health in the database for the selected character
+            DB_ExecuteQuery(database,
+                "UPDATE characters SET maxhealth = '%f', health = '%f' WHERE owner = '%d' AND name = '%q'",
+                player[playerid][maxHealth], player[playerid][health], player[playerid][ID], player[playerid][chosenChar]);
+
+            // Apply max health and current health changes in-game
+            SetPlayerMaxHealth(playerid, player[playerid][maxHealth]);
+            SetPlayerHealth(playerid, player[playerid][health]);
+
+            // Update HUD to reflect health changes
+            UpdateHudElementForPlayer(playerid, HUD_HEALTH);
+
+            SendClientMessage(playerid, COLOR_GREEN, "Your max health has increased by 10%, and your current health was restored!");
+        }
+		else if(listitem == 1) // Jump
+		{
+			if(player[playerid][unlockedJumpSkill])
+			{
+				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Jump skill.");
+			}
+			else
+			{
+				player[playerid][unlockedJumpSkill] = true;
+
+				// Lower gravity for higher jumps (default: 0.008, less = more jump)
+				SetPlayerGravity(playerid, 0.005); // Adjust value to fit game balance
+
+				// Save skill unlock to DB
+				DB_ExecuteQuery(database,
+					"UPDATE characters SET unlockedjump = '1' WHERE owner = '%d' AND name = '%q'",
+					player[playerid][ID], player[playerid][chosenChar]);
+
+				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the Jump skill! You can now jump higher.");
+			}
+		}
+		else if(listitem == 2) // Unarmed
+		{
+			if(player[playerid][unlockedUnarmedSkill])
+			{
+				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Unarmed skill.");
+			}
+			else
+			{
+				player[playerid][unlockedUnarmedSkill] = true;
+				DB_ExecuteQuery(database,
+					"UPDATE characters SET unlockedunarmed = '1' WHERE owner = '%d' AND name = '%q'",
+					player[playerid][ID], player[playerid][chosenChar]);
+
+				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the Unarmed Damage skill! You can now Punch harder.");
+			}
+		}
+        else
+        {
+            // Placeholder for other skill logic
+            SendClientMessage(playerid, COLOR_YELLOW, "Skill effect not implemented yet.");
+        }
+    }
+    else
+    {
+        SendClientMessage(playerid, COLOR_SYSTEM, "Invalid selection.");
+    }
+
+    return 1;
+}
+//skilltests
+
 /*
 * Dialog Callbacks
 */
