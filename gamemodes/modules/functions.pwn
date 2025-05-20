@@ -370,10 +370,10 @@ bool:IsPlayerAtFuelPump(playerid)
 {
 	for (new i = 0; i < MAX_FUEL_PUMPS; i++)
 	{
-		if(!IsPlayerInRangeOfPoint(playerid, FUEL_PUMP_RANGE, fuelPump[i][0], fuelPump[i][1], fuelPump[i][2]))
-			return false;
+		if(IsPlayerInRangeOfPoint(playerid, FUEL_PUMP_RANGE, fuelPump[i][0], fuelPump[i][1], fuelPump[i][2]))
+			return true;
 	}
-	return true;
+    return false;
 }
 
 ScrapRequiredToRepairVeh(playerid)
