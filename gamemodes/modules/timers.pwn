@@ -293,20 +293,22 @@ public ThirstTimer(playerid)
 
 public DiseaseTimer(playerid)
 {
-    if(player[playerid][disease] == 0)
+    if(player[playerid][disease] <= 89)
     {
+        new damage = math_floor(25 * ((90 - player[playerid][disease]) / 90));
         UpdateHudElementForPlayer(playerid, HUD_DISEASE);
-        player[playerid][health] = player[playerid][health] - 3;
+        player[playerid][health] = player[playerid][health] - damage;
         SetPlayerHealth(playerid, player[playerid][health]);
         UpdateHudElementForPlayer(playerid, HUD_HEALTH);
 
         ClearAnimations(playerid);
 	    OnePlayAnim(playerid, "FOOD", "EAT_Vomit_P", 3.0, 0, 0, 0, 0, 0);
 
-        SendClientMessage(playerid, COLOR_RED, "You are very sick, you should find some medicine soon.");
+        SendClientMessage(playerid, COLOR_RED, "You are sick, you should find some medicine soon.");
     }
     return 1;
 }
+
 
 public FuelTimer(playerid, vehicleid)
 {

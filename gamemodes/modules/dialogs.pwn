@@ -64,7 +64,6 @@ public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
         "HP Increase",
         "Jump",
         "Unarmed Damage",
-        "Wall Climb",
         "Bite",
         "Combust",
         "Stun",
@@ -137,6 +136,22 @@ public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
 					player[playerid][ID], player[playerid][chosenChar]);
 
 				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the Unarmed Damage skill! You can now Punch harder.");
+			}
+		}
+		else if(listitem == 3) // Bite
+		{
+			if(player[playerid][unlockedBiteSkill])
+			{
+				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Bite skill.");
+			}
+			else
+			{
+				player[playerid][unlockedBiteSkill] = true;
+				DB_ExecuteQuery(database,
+					"UPDATE characters SET unlockedbite = '1' WHERE owner = '%d' AND name = '%q'",
+					player[playerid][ID], player[playerid][chosenChar]);
+
+				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the bite skill! You can now use /bite (id) to bite and infect humans.");
 			}
 		}
         else

@@ -176,6 +176,7 @@ OnPlayerCharacterDataLoaded(playerid)
 		// Load perks
 		player[playerid][unlockedJumpSkill] = bool:DB_GetFieldIntByName(Result, "unlockedjump");
 		player[playerid][unlockedUnarmedSkill] = bool:DB_GetFieldIntByName(Result, "unlockedunarmed");
+		player[playerid][unlockedBiteSkill] = bool:DB_GetFieldIntByName(Result, "unlockedbite");
 		/*
 		* Set the character's spawn up
 		*/

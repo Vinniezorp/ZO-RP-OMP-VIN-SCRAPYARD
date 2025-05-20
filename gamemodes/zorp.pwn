@@ -257,7 +257,7 @@ public OnPlayerDisconnect(playerid, reason)
 public OnPlayerSpawn(playerid)
 {
 	//Check and correct gravity
-	if (player[playerid][unlockedJumpSkill])
+	if (player[playerid][unlockedBiteSkill])
 	{
 		SetPlayerGravity(playerid, 0.005);
 	}
@@ -265,6 +265,7 @@ public OnPlayerSpawn(playerid)
 	{
 		SetPlayerGravity(playerid, 0.008);
 	}
+	
     // Set basic weapon skills to 1
     SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL, 1);
     SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL_SILENCED, 1);
@@ -292,7 +293,9 @@ public OnPlayerDeath(playerid, killerid, reason)
 	KillTimer(player[playerid][fuelTimer]);
 	KillTimer(player[playerid][fillVehicleTimer]);
 	HideHudForPlayer(playerid);
-
+	// Set disease to 100
+	player[playerid][disease]=100;
+	UpdateHudElementForPlayer(playerid, HUD_DISEASE);
 	/*
 	* Set the player to spectate mode and set the timer to respawn
 	*/
@@ -505,6 +508,11 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 
 public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
+	//perktests
+	if (HOLDING(KEY_WALK)){
+		SendClientMessage(playerid, COLOR_YELLOW, "You are near the selected player!");
+	}
+	//perktests
 	if(IsKeyJustDown(KEY_SPRINT, newkeys, oldkeys))
 	{
 	    StopLoopingAnim(playerid);

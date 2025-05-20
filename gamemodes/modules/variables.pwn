@@ -39,6 +39,7 @@ enum E_PLAYERS
     maxThirst,
     disease,
     maxDisease,
+    bool:infection,
     spawned,
     Float:pPos[4],
     plrinterior,
@@ -51,6 +52,7 @@ enum E_PLAYERS
     wepSlot[13],
     bool:unlockedJumpSkill,
     bool:unlockedUnarmedSkill,
+    bool:unlockedBiteSkill,
 	/*
 	* Not Saved
 	*/
@@ -86,6 +88,7 @@ enum E_PLAYERS
     antiMessageSpam,
     invGivePlayerId,
     engineAntiSpam,
+    biteAntiSpam,
 
     /*
     * Admin fly
