@@ -50,11 +50,18 @@ enum E_PLAYERS
     plrFaction,
     factionrank,
     wepSlot[13],
+    unlockedHpIncreaseSkill,
     bool:unlockedJumpSkill,
-    bool:unlockedUnarmedSkill,
+    unlockedUnarmedSkill,
     bool:unlockedBiteSkill,
     bool:unlockedCombustSkill,
     bool:unlockedStunSkill,
+    bool:unlockedGrabSkill,
+    bool:unlockedBorrowedStrengthSkill,
+    bool:unlockedBorrowedStrengthSkillActive,
+    Float:unlockedBorrowedStrengthSkillDamage,
+    bool:unlockedSuperJumpSkill,
+    bool:unlockedCorneredSkill,
 	/*
 	* Not Saved
 	*/
@@ -95,12 +102,7 @@ enum E_PLAYERS
     grabAntiSpam,
     borrowedStrengthAntiSpam,
     borrowedSuperJumpAntiSpam,
-    bool:unlockedGrabSkill,
-    bool:unlockedBorrowedStrengthSkill,
-    bool:unlockedBorrowedStrengthSkillActive,
-    Float:unlockedBorrowedStrengthSkillDamage,
-    bool:unlockedSuperJumpSkill,
-    bool:unlockedCorneredSkill,
+
 
     /*
     * Admin fly

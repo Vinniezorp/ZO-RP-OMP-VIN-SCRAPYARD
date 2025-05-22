@@ -81,62 +81,18 @@ public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
 
         if(listitem == 0) // HP Increase
         {
-            // Increase max health by 10% of initial max health
-            player[playerid][maxHealth] += INITIAL_MAX_HEALTH_ZED * 0.10;
-
-            // Set current health to new max health
-            player[playerid][health] = player[playerid][maxHealth];
-
-            // Update the max health and health in the database for the selected character
-            DB_ExecuteQuery(database,
-                "UPDATE characters SET maxhealth = '%f', health = '%f' WHERE owner = '%d' AND name = '%q'",
-                player[playerid][maxHealth], player[playerid][health], player[playerid][ID], player[playerid][chosenChar]);
-
-            // Apply max health and current health changes in-game
-            SetPlayerMaxHealth(playerid, player[playerid][maxHealth]);
-            SetPlayerHealth(playerid, player[playerid][health]);
-
-            // Update HUD to reflect health changes
-            UpdateHudElementForPlayer(playerid, HUD_HEALTH);
-
-            SendClientMessage(playerid, COLOR_GREEN, "Your max health has increased by 10%, and your current health was restored!");
-        }
+			TryUpgradeHpSkill(playerid);
+    		return 1;
+		}
 		else if(listitem == 1) // Jump
 		{
-			if(player[playerid][unlockedJumpSkill])
-			{
-				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Jump skill.");
-			}
-			else
-			{
-				player[playerid][unlockedJumpSkill] = true;
-
-				// Lower gravity for higher jumps (default: 0.008, less = more jump)
-				SetPlayerGravity(playerid, 0.005); // Adjust value to fit game balance
-
-				// Save skill unlock to DB
-				DB_ExecuteQuery(database,
-					"UPDATE characters SET unlockedjump = '1' WHERE owner = '%d' AND name = '%q'",
-					player[playerid][ID], player[playerid][chosenChar]);
-
-				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the Jump skill! You can now jump higher.");
-			}
+			TryUpgradeJumpSkill(playerid);
+			return 1;
 		}
 		else if(listitem == 2) // Unarmed
 		{
-			if(player[playerid][unlockedUnarmedSkill])
-			{
-				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Unarmed skill.");
-			}
-			else
-			{
-				player[playerid][unlockedUnarmedSkill] = true;
-				DB_ExecuteQuery(database,
-					"UPDATE characters SET unlockedunarmed = '1' WHERE owner = '%d' AND name = '%q'",
-					player[playerid][ID], player[playerid][chosenChar]);
-
-				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the Unarmed Damage skill! You can now Punch harder.");
-			}
+			TryUpgradeUnarmedSkill(playerid);
+			return 1;
 		}
 		else if(listitem == 3) // Bite
 		{

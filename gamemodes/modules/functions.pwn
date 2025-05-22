@@ -479,9 +479,81 @@ CreateInteriorPickup(interiorid)
 		srvInterior[interiorid][intVirWorld], srvInterior[interiorid][intWorld]);
 	return 1;
 }
-/*
-* Super Jump
-*/
+// Perk related functions
+stock TryUpgradeUnarmedSkill(playerid)
+{
+    if (player[playerid][unlockedUnarmedSkill] >= 5)
+    {
+        SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the maximum level of this skill.");
+        return 0;
+    }
+	else
+	{
+		DB_ExecuteQuery(database,
+			"UPDATE characters SET unlockedunarmed = unlockedunarmed + 1 WHERE owner = '%d' AND name = '%q'",
+			player[playerid][ID], player[playerid][chosenChar]);
+
+		SendClientMessage(playerid, COLOR_GREEN, "You have upgraded the Unarmed Damage skill! You can now Punch harder.");
+
+        player[playerid][unlockedUnarmedSkill]++;
+        return 1;
+	}
+}
+stock TryUpgradeHpSkill(playerid)
+{
+    if (player[playerid][unlockedHpIncreaseSkill] >= 5)
+    {
+        SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the maximum level of this skill.");
+        return 0;
+    }
+
+    // Increase max health by 10% of initial max health
+    player[playerid][maxHealth] += INITIAL_MAX_HEALTH_ZED * 0.10;
+
+    // Set current health to new max health
+    player[playerid][health] = player[playerid][maxHealth];
+
+    // Update the max health, health and skillcount in the database
+    DB_ExecuteQuery(database,
+        "UPDATE characters SET maxhealth = '%f', health = '%f', unlockedhpinc = unlockedhpinc + 1 WHERE owner = '%d' AND name = '%q'",
+        player[playerid][maxHealth], player[playerid][health], player[playerid][ID], player[playerid][chosenChar]);
+
+    // Apply the changes in-game
+    SetPlayerMaxHealth(playerid, player[playerid][maxHealth]);
+    SetPlayerHealth(playerid, player[playerid][health]);
+
+    // Update HUD
+    UpdateHudElementForPlayer(playerid, HUD_HEALTH);
+
+    SendClientMessage(playerid, COLOR_GREEN, "Your max health has increased by 10%, and your current health was restored!");
+
+    player[playerid][unlockedHpIncreaseSkill]++;
+
+    return 1;
+}
+
+stock TryUpgradeJumpSkill(playerid)
+{
+    if(player[playerid][unlockedJumpSkill])
+	{
+	    SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Jump skill.");
+        return 0;
+	}
+	
+    player[playerid][unlockedJumpSkill] = true;
+
+	// Lower gravity for higher jumps (default: 0.008, less = more jump)
+	SetPlayerGravity(playerid, 0.005); // Adjust value to fit game balance
+
+	// Save skill unlock to DB
+	DB_ExecuteQuery(database,
+		"UPDATE characters SET unlockedjump = '1' WHERE owner = '%d' AND name = '%q'",
+		player[playerid][ID], player[playerid][chosenChar]);
+
+	SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the Jump skill! You can now jump higher.");
+    return 1;
+}
+
 SuperJump(playerid)
 {
     if ((GetTickCount() - player[playerid][borrowedSuperJumpAntiSpam]) < 5000)
