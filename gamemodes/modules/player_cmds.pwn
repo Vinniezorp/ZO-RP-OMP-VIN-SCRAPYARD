@@ -765,4 +765,26 @@
     SendClientMessage(playerid, COLOR_RED, "You can't do that!");
     return 0;
 }
+@cmd() stun(playerid, params[], help)
+{
+    if(player[playerid][iszombie] && player[playerid][unlockedStunSkill])
+    {
+        if((GetTickCount() - player[playerid][stunAntiSpam]) < 30000)
+        {
+            return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "Please wait 30 seconds between uses of this command.");
+        }
+        new Float:x, Float:y, Float:z;
+        new victim = strval(params);
+        GetPlayerPos(victim, x, y, z);
+        if (IsPlayerInRangeOfPoint(playerid, 4.0, x, y, z))
+        {
+            SetTimerEx("SpawnTimer", 2000, false, "d", victim);
+            TogglePlayerControllable(victim, false);
+            player[playerid][stunAntiSpam] = GetTickCount();
+        }
+        return 1;
+    }
+    SendClientMessage(playerid, COLOR_RED, "You can't do that!");
+    return 0;
+}
 //skilltests

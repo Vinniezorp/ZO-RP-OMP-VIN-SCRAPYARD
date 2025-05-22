@@ -54,6 +54,7 @@ enum E_PLAYERS
     bool:unlockedUnarmedSkill,
     bool:unlockedBiteSkill,
     bool:unlockedCombustSkill,
+    bool:unlockedStunSkill,
 	/*
 	* Not Saved
 	*/
@@ -90,6 +91,7 @@ enum E_PLAYERS
     invGivePlayerId,
     engineAntiSpam,
     biteAntiSpam,
+    stunAntiSpam,
 
     /*
     * Admin fly

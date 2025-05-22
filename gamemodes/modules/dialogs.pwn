@@ -170,6 +170,22 @@ public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
 				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the combust skill! When you die, your corpse explodes, dealing damage to nearby enemies.");
 			}
 		}
+		else if (listitem == 5) //Stun
+		{
+			if(player[playerid][unlockedStunSkill])
+			{
+				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the stun skill.");
+			}
+			else
+			{
+				player[playerid][unlockedStunSkill] = true;
+				DB_ExecuteQuery(database,
+					"UPDATE characters SET unlockedstun = '1' WHERE owner = '%d' AND name = '%q'",
+					player[playerid][ID], player[playerid][chosenChar]);
+
+				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the stun skill! /stun (id) to stun other players. 30 second cooldown");
+			}
+		}
         else
         {
             // Placeholder for other skill logic
