@@ -352,15 +352,18 @@ public OnPlayerDeath(playerid, killerid, reason)
 
 public OnPlayerDamage(&playerid, &Float:amount, &issuerid, &WEAPON:weapon, &bodypart)
 {
-	if(weapon == 0){
-		amount=10;
-	}
-	//perks test 
-	if(weapon == 0 && player[issuerid][unlockedUnarmedSkill]){
-		amount=20;
-	}
-	//perks test
-	return 1;
+    if(weapon == 0){
+        amount=10;
+    }
+    //perks test 
+    if(weapon == 0 && player[issuerid][unlockedUnarmedSkill]){
+        amount=20;
+    }
+    if(weapon == 0 && player[issuerid][unlockedBorrowedStrengthSkillActive]){
+        amount = amount+player[issuerid][unlockedBorrowedStrengthSkillDamage];
+    }
+    //perks test
+    return 1;
 }
 
 public OnPlayerDamageDone(playerid, Float:amount, issuerid, WEAPON:weapon, bodypart)

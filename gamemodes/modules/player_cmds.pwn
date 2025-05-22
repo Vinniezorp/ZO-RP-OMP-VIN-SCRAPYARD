@@ -811,4 +811,46 @@
     SendClientMessage(playerid, COLOR_RED, "You can't do that!");
     return 0;
 }
+
+@cmd() bstr(playerid, params[], help)
+{
+    if (player[playerid][iszombie] && player[playerid][unlockedBorrowedStrengthSkill])
+    {
+        if ((GetTickCount() - player[playerid][borrowedStrengthAntiSpam]) < 30000)
+        {
+            return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED,
+                "Please wait 30 seconds between uses of this command.");
+        }
+
+        if (!strlen(params)) {
+            return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED,
+                "Usage: /bstr [amount]");
+        }
+
+        new Float:damage = strval(params);
+
+        if (damage <= 0 || damage >= player[playerid][health]) {
+            return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED,
+                "Invalid health amount.");
+        }
+
+        SetTimerEx("unlockedBorrowedStrengthSkillActiveTimer", 30000, false, "d", playerid); // One-time timer
+        player[playerid][health] -= damage;
+        player[playerid][unlockedBorrowedStrengthSkillDamage] = damage * 0.25;
+        player[playerid][unlockedBorrowedStrengthSkillActive] = true;
+
+        SetPlayerHealth(playerid, player[playerid][health]);
+        UpdateHudElementForPlayer(playerid, HUD_HEALTH);
+        player[playerid][borrowedStrengthAntiSpam] = GetTickCount();
+
+        SendProxMessage(playerid, COLOR_RED, 30.0, PROXY_MSG_TYPE_OTHER,
+            "channels their strength through blood sacrifice, becoming momentarily stronger.");
+
+        return 1;
+    }
+
+    SendClientMessage(playerid, COLOR_RED, "You can't do that!");
+    return 0;
+}
+
 //skilltests

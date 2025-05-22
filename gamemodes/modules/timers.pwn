@@ -28,7 +28,7 @@ forward AntiMessageSpamTimer(playerid);
 forward LoginCamera(playerid);
 forward HideInfoBox(playerid);
 forward RespawnAfterDeath(playerid);
-
+forward unlockedBorrowedStrengthSkillActiveTimer(playerid);
 /*
 * Timer Functions
 */
@@ -73,6 +73,10 @@ public SpawnTimer(playerid)
     TogglePlayerControllable(playerid, true);
 }
 
+public unlockedBorrowedStrengthSkillActiveTimer(playerid)
+{
+    player[playerid][unlockedBorrowedStrengthSkillActive] = false;
+}
 public TimedKick(playerid)
 {
 	Kick(playerid);
