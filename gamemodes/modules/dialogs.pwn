@@ -212,7 +212,7 @@ public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
 			{
 				player[playerid][unlockedBorrowedStrengthSkill] = true;
 				DB_ExecuteQuery(database,
-					"UPDATE characters SET unlockedborrowedstrength = '1' WHERE owner = '%d' AND name = '%q'",
+					"UPDATE characters SET unlockedbstr = '1' WHERE owner = '%d' AND name = '%q'",
 					player[playerid][ID], player[playerid][chosenChar]);
 
 				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked borrowed strength! /bstr (amount) to Sacrifice a portion of your health to deal 25% of that that amount as bonus damage per hit for the next 30 seconds. 30-second cooldown.");
