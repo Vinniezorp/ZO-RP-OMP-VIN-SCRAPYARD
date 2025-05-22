@@ -566,6 +566,58 @@ stock TryUpgradeJumpSkill(playerid)
     return 1;
 }
 
+stock TryUnlockCombustSkill(playerid)
+{
+    if(player[playerid][unlockedCombustSkill])
+	{
+		SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the combust skill.");
+        return 0;
+	}
+
+	player[playerid][unlockedCombustSkill] = true;
+	DB_ExecuteQuery(database,
+		"UPDATE characters SET unlockedcombust = '1' WHERE owner = '%d' AND name = '%q'",
+		player[playerid][ID], player[playerid][chosenChar]);
+
+	SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the combust skill! When you die, your corpse explodes, dealing damage to nearby enemies.");
+    return 1;
+}
+
+stock Combust(playerid)
+{
+new players[MAX_PLAYERS];
+new length;
+new Float:zombieX, Float:zombieY, Float:zombieZ;
+
+GetPlayerPos(playerid, zombieX, zombieY, zombieZ);
+
+length = GetPlayers(players, sizeof(players));
+    
+for (new i = 0; i < length; i++)
+    {
+        new target = players[i];
+
+        // Skip self
+        if (target == playerid || !IsPlayerConnected(target)) continue;
+
+        new Float:targetX, Float:targetY, Float:targetZ;
+        GetPlayerPos(target, targetX, targetY, targetZ);
+
+        if (IsPlayerInRangeOfPoint(playerid, 6.0, targetX, targetY, targetZ))
+        {
+            //player[target][disease] = 0;
+            player[target][health] -= 20;
+
+            SetPlayerHealth(target, player[target][health]);
+
+            UpdateHudElementForPlayer(target, HUD_HEALTH);
+            //UpdateHudElementForPlayer(target, HUD_DISEASE);
+
+            SendProxMessage(playerid, COLOR_RP_PURPLE, 30.0, PROXY_MSG_TYPE_OTHER, "The infected erupts in a grotesque explosion of acidic bile and razor-sharp bone fragments.");
+        }
+    }
+}
+
 Bite(playerid)
 {
     if ((GetTickCount() - player[playerid][biteAntiSpam]) < 15000)

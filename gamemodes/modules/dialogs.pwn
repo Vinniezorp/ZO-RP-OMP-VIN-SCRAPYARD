@@ -101,19 +101,9 @@ public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
 		}
 		else if(listitem == 4) //combust
 		{
-			if(player[playerid][unlockedCombustSkill])
-			{
-				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the combust skill.");
-			}
-			else
-			{
-				player[playerid][unlockedCombustSkill] = true;
-				DB_ExecuteQuery(database,
-					"UPDATE characters SET unlockedcombust = '1' WHERE owner = '%d' AND name = '%q'",
-					player[playerid][ID], player[playerid][chosenChar]);
-
-				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the combust skill! When you die, your corpse explodes, dealing damage to nearby enemies.");
-			}
+			TryUnlockCombustSkill(playerid);
+			return 1;
+			
 		}
 		else if (listitem == 5) //Stun
 		{
