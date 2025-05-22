@@ -53,6 +53,7 @@ enum E_PLAYERS
     bool:unlockedJumpSkill,
     bool:unlockedUnarmedSkill,
     bool:unlockedBiteSkill,
+    bool:unlockedCombustSkill,
 	/*
 	* Not Saved
 	*/

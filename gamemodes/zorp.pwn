@@ -290,6 +290,43 @@ public OnPlayerSpawn(playerid)
 }
 public OnPlayerDeath(playerid, killerid, reason)
 {
+	    //combustperkcheck
+    if (player[playerid][iszombie] && player[playerid][unlockedCombustSkill])
+{
+    new players[MAX_PLAYERS];
+    new length;
+    new Float:zombieX, Float:zombieY, Float:zombieZ;
+
+    GetPlayerPos(playerid, zombieX, zombieY, zombieZ);
+
+    length = GetPlayers(players, sizeof(players));
+    
+    for (new i = 0; i < length; i++)
+    {
+        new target = players[i];
+
+        // Skip self
+        if (target == playerid || !IsPlayerConnected(target)) continue;
+
+        new Float:targetX, Float:targetY, Float:targetZ;
+        GetPlayerPos(target, targetX, targetY, targetZ);
+
+        if (IsPlayerInRangeOfPoint(playerid, 6.0, targetX, targetY, targetZ))
+        {
+            //player[target][disease] = 0;
+            player[target][health] -= 20;
+
+            SetPlayerHealth(target, player[target][health]);
+
+            UpdateHudElementForPlayer(target, HUD_HEALTH);
+            //UpdateHudElementForPlayer(target, HUD_DISEASE);
+
+            SendProxMessage(playerid, COLOR_RP_PURPLE, 30.0, PROXY_MSG_TYPE_OTHER, "The infected erupts in a grotesque explosion of acidic bile and razor-sharp bone fragments.");
+        }
+    }
+
+    player[playerid][biteAntiSpam] = GetTickCount();
+}
 	/*
 	* Kill timers and reset spawned variable as well as hide the HUD
 	*/
