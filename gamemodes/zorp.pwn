@@ -324,8 +324,6 @@ public OnPlayerDeath(playerid, killerid, reason)
             SendProxMessage(playerid, COLOR_RP_PURPLE, 30.0, PROXY_MSG_TYPE_OTHER, "The infected erupts in a grotesque explosion of acidic bile and razor-sharp bone fragments.");
         }
     }
-
-    player[playerid][biteAntiSpam] = GetTickCount();
 }
 	/*
 	* Kill timers and reset spawned variable as well as hide the HUD
@@ -561,10 +559,16 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
 	//zedperk hotkeys
 	if (HOLDING( KEY_WALK | KEY_JUMP )){
-		if(player[playerid][iszombie] && player[playerid][unlockedSuperJumpSkill]){
+		if(player[playerid][iszombie] && player[playerid][unlockedSuperJumpSkill])
+		{
 		SuperJump(playerid);
 		}
-
+	}
+	if (HOLDING( KEY_WALK | KEY_AIM)){
+		if(player[playerid][iszombie] && player[playerid][unlockedBiteSkill])
+		{
+		Bite(playerid);
+		}
 	}
 	//zedperk hotkeys
 	if(IsKeyJustDown(KEY_SPRINT, newkeys, oldkeys))

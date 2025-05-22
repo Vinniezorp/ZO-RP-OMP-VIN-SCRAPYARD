@@ -738,33 +738,6 @@
 
     return 1;
 }
-
-@cmd() bite(playerid, params[], help)
-{
-    if(player[playerid][iszombie] && player[playerid][unlockedBiteSkill])
-    {
-        if((GetTickCount() - player[playerid][biteAntiSpam]) < 5000)
-        {
-            return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "Please wait 5 seconds between uses of this command.");
-        }
-        new Float:x, Float:y, Float:z;
-        new victim = strval(params);
-        GetPlayerPos(victim, x, y, z);
-        if (IsPlayerInRangeOfPoint(playerid, 4.0, x, y, z))
-        {
-            player[victim][disease] = 0;
-            SendProxMessage(playerid, COLOR_RP_PURPLE, 30.0, PROXY_MSG_TYPE_OTHER, "Tear deep into their victims flesh");
-            player[victim][health] = player[victim][health] - 10;
-            SetPlayerHealth(victim, player[victim][health]);
-            UpdateHudElementForPlayer(victim, HUD_HEALTH);
-            UpdateHudElementForPlayer(strval(params), HUD_DISEASE);
-            player[playerid][biteAntiSpam] = GetTickCount();
-        }
-        return 1;
-    }
-    SendClientMessage(playerid, COLOR_RED, "You can't do that!");
-    return 0;
-}
 @cmd() stun(playerid, params[], help)
 {
     if(player[playerid][iszombie] && player[playerid][unlockedStunSkill])

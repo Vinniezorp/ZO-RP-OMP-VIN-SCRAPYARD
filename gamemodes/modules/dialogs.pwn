@@ -96,19 +96,8 @@ public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
 		}
 		else if(listitem == 3) // Bite
 		{
-			if(player[playerid][unlockedBiteSkill])
-			{
-				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Bite skill.");
-			}
-			else
-			{
-				player[playerid][unlockedBiteSkill] = true;
-				DB_ExecuteQuery(database,
-					"UPDATE characters SET unlockedbite = '1' WHERE owner = '%d' AND name = '%q'",
-					player[playerid][ID], player[playerid][chosenChar]);
-
-				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the bite skill! You can now use /bite (id) to bite and infect humans.");
-			}
+			TryUpgradeBiteSkill(playerid);
+			return 1;
 		}
 		else if(listitem == 4) //combust
 		{

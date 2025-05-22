@@ -53,7 +53,7 @@ enum E_PLAYERS
     unlockedHpIncreaseSkill,
     bool:unlockedJumpSkill,
     unlockedUnarmedSkill,
-    bool:unlockedBiteSkill,
+    unlockedBiteSkill,
     bool:unlockedCombustSkill,
     bool:unlockedStunSkill,
     bool:unlockedGrabSkill,

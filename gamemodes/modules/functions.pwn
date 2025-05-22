@@ -480,6 +480,21 @@ CreateInteriorPickup(interiorid)
 	return 1;
 }
 // Perk related functions
+TryUpgradeBiteSkill(playerid)
+{
+    if(player[playerid][unlockedBiteSkill] >= 5)
+	{
+		SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the maximum level of this skill.");
+        return 0;
+	}
+    DB_ExecuteQuery(database,
+		"UPDATE characters SET unlockedbite = unlockedbite +1 WHERE owner = '%d' AND name = '%q'",
+		player[playerid][ID], player[playerid][chosenChar]);
+
+	SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the bite skill! You can now use alt+rightclick to bite the nearest human close to you and inflict disease on them.");
+    player[playerid][unlockedBiteSkill]++;
+    return 1;
+}
 stock TryUpgradeUnarmedSkill(playerid)
 {
     if (player[playerid][unlockedUnarmedSkill] >= 5)
@@ -487,17 +502,14 @@ stock TryUpgradeUnarmedSkill(playerid)
         SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the maximum level of this skill.");
         return 0;
     }
-	else
-	{
-		DB_ExecuteQuery(database,
-			"UPDATE characters SET unlockedunarmed = unlockedunarmed + 1 WHERE owner = '%d' AND name = '%q'",
-			player[playerid][ID], player[playerid][chosenChar]);
+    DB_ExecuteQuery(database,
+		"UPDATE characters SET unlockedunarmed = unlockedunarmed + 1 WHERE owner = '%d' AND name = '%q'",
+		player[playerid][ID], player[playerid][chosenChar]);
 
-		SendClientMessage(playerid, COLOR_GREEN, "You have upgraded the Unarmed Damage skill! You can now Punch harder.");
+	SendClientMessage(playerid, COLOR_GREEN, "You have upgraded the Unarmed Damage skill! You can now Punch harder.");
 
-        player[playerid][unlockedUnarmedSkill]++;
-        return 1;
-	}
+    player[playerid][unlockedUnarmedSkill]++;
+    return 1;
 }
 stock TryUpgradeHpSkill(playerid)
 {
@@ -551,6 +563,72 @@ stock TryUpgradeJumpSkill(playerid)
 		player[playerid][ID], player[playerid][chosenChar]);
 
 	SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the Jump skill! You can now jump higher.");
+    return 1;
+}
+
+Bite(playerid)
+{
+    if ((GetTickCount() - player[playerid][biteAntiSpam]) < 15000)
+    {
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "Please wait 15 seconds between uses of this command.");
+    }
+
+    new players[MAX_PLAYERS], length;
+    new Float:zombieX, Float:zombieY, Float:zombieZ;
+    GetPlayerPos(playerid, zombieX, zombieY, zombieZ);
+
+    length = GetPlayers(players, sizeof(players));
+
+    new closestCandidates[MAX_PLAYERS];
+    new candidateCount = 0;
+    new Float:closestDistance = 99999.0;
+
+    for (new i = 0; i < length; i++)
+    {
+        new target = players[i];
+        if (target == playerid || !IsPlayerConnected(target)) continue;
+
+        new Float:targetX, Float:targetY, Float:targetZ;
+        GetPlayerPos(target, targetX, targetY, targetZ);
+
+        //blackmagic
+        new Float:distance = floatsqroot( floatpower(zombieX - targetX, 2.0) + floatpower(zombieY - targetY, 2.0) + floatpower(zombieZ - targetZ, 2.0) );
+
+        if (distance <= 3.0)
+        {
+            if (floatcmp(distance, closestDistance) < 0)
+            {
+                // Found closer target
+                closestDistance = distance;
+                candidateCount = 1;
+                closestCandidates[0] = target;
+            }
+            else if (floatcmp(distance, closestDistance) == 0)
+            {
+                // Same distance as closest, add to pool
+                closestCandidates[candidateCount++] = target;
+            }
+        }
+    }
+
+    if (candidateCount == 0)
+    {
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "No valid targets nearby to bite.");
+    }
+
+    new target = closestCandidates[random(candidateCount)];
+
+    // Bite logic
+    player[target][disease] -= (10 * player[playerid][unlockedBiteSkill]);
+    player[target][health] -= 10;
+
+    SetPlayerHealth(target, player[target][health]);
+
+    UpdateHudElementForPlayer(target, HUD_HEALTH);
+    UpdateHudElementForPlayer(target, HUD_DISEASE);
+
+    // Update anti-spam timer
+    player[playerid][biteAntiSpam] = GetTickCount();
     return 1;
 }
 

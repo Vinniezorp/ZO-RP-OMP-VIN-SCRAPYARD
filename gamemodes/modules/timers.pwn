@@ -298,17 +298,26 @@ public ThirstTimer(playerid)
 
 public DiseaseTimer(playerid)
 {
-    if(player[playerid][disease] <= 89)
+    new Float:diseaseLevel = float(player[playerid][disease]);
+
+    if (diseaseLevel < 90.0)
     {
-        new damage = math_floor(25 * ((90 - player[playerid][disease]) / 90));
+        new Float:damageFloat = 25.0 * ((90.0 - diseaseLevel) / 90.0);
+        new damage = floatround(damageFloat, floatround_floor);
+
+        if (damage > 0)
+        {
+            player[playerid][health] -= damage;
+            if (player[playerid][health] < 0)
+                player[playerid][health] = 0;
+            SetPlayerHealth(playerid, player[playerid][health]);
+        }
+
         UpdateHudElementForPlayer(playerid, HUD_DISEASE);
-        player[playerid][health] = player[playerid][health] - damage;
-        SetPlayerHealth(playerid, player[playerid][health]);
         UpdateHudElementForPlayer(playerid, HUD_HEALTH);
 
         ClearAnimations(playerid);
-	    OnePlayAnim(playerid, "FOOD", "EAT_Vomit_P", 3.0, 0, 0, 0, 0, 0);
-
+        OnePlayAnim(playerid, "FOOD", "EAT_Vomit_P", 3.0, 0, 0, 0, 0, 0);
         SendClientMessage(playerid, COLOR_RED, "You are sick, you should find some medicine soon.");
     }
     return 1;
