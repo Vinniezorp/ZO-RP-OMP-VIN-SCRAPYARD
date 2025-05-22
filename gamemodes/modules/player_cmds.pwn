@@ -787,4 +787,28 @@
     SendClientMessage(playerid, COLOR_RED, "You can't do that!");
     return 0;
 }
+@cmd() grab(playerid, params[], help)
+{
+    if(player[playerid][iszombie] && player[playerid][unlockedGrabSkill])
+    {
+        if((GetTickCount() - player[playerid][grabAntiSpam]) < 30000)
+        {
+            return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "Please wait 30 seconds between uses of this command.");
+        }
+        new Float:px, Float:py, Float:pz;
+        new Float:vx, Float:vy, Float:vz;
+        new victim = strval(params);
+        GetPlayerPos(victim, vx, vy, vz);
+        GetPlayerPos(playerid, px, py, pz);
+
+        if (IsPlayerInRangeOfPoint(playerid, 10, vx, vy, vz))
+        {
+            SetPlayerPos(victim, px, py+1, pz);
+            player[playerid][grabAntiSpam] = GetTickCount();
+        }
+        return 1;
+    }
+    SendClientMessage(playerid, COLOR_RED, "You can't do that!");
+    return 0;
+}
 //skilltests

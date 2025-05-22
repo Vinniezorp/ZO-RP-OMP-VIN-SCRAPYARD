@@ -186,6 +186,22 @@ public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
 				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the stun skill! /stun (id) to stun other players. 30 second cooldown");
 			}
 		}
+		else if (listitem == 6) //Grab
+		{
+			if(player[playerid][unlockedGrabSkill])
+			{
+				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the grab skill.");
+			}
+			else
+			{
+				player[playerid][unlockedGrabSkill] = true;
+				DB_ExecuteQuery(database,
+					"UPDATE characters SET unlockedgrab = '1' WHERE owner = '%d' AND name = '%q'",
+					player[playerid][ID], player[playerid][chosenChar]);
+
+				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the grab skill! /grab (id) to grab other players to you. 30 second cooldown");
+			}
+		}
         else
         {
             // Placeholder for other skill logic

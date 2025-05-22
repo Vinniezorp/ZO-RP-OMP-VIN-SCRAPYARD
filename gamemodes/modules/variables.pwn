@@ -92,6 +92,8 @@ enum E_PLAYERS
     engineAntiSpam,
     biteAntiSpam,
     stunAntiSpam,
+    grabAntiSpam,
+    bool:unlockedGrabSkill,
 
     /*
     * Admin fly
