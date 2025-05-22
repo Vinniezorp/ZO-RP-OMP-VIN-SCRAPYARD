@@ -362,6 +362,9 @@ public OnPlayerDamage(&playerid, &Float:amount, &issuerid, &WEAPON:weapon, &body
     if(weapon == 0 && player[issuerid][unlockedBorrowedStrengthSkillActive]){
         amount = amount+player[issuerid][unlockedBorrowedStrengthSkillDamage];
     }
+	if(weapon == 0 && player[issuerid][unlockedCorneredSkill] && player[issuerid][health] < player[issuerid][maxHealth] * 0.3){
+		amount+= 20;
+	}
     //perks test
     return 1;
 }
@@ -556,8 +559,11 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
 	//perktests
-	if (HOLDING(KEY_WALK)){
-		SendClientMessage(playerid, COLOR_YELLOW, "You are near the selected player!");
+	if (HOLDING( KEY_WALK | KEY_JUMP )){
+		if(player[playerid][iszombie] && player[playerid][unlockedCorneredSkill]){
+		SuperJump(playerid);
+		}
+
 	}
 	//perktests
 	if(IsKeyJustDown(KEY_SPRINT, newkeys, oldkeys))

@@ -181,6 +181,8 @@ OnPlayerCharacterDataLoaded(playerid)
 		player[playerid][unlockedStunSkill] = bool:DB_GetFieldIntByName(Result, "unlockedstun");
 		player[playerid][unlockedGrabSkill] = bool:DB_GetFieldIntByName(Result, "unlockedgrab");
 		player[playerid][unlockedBorrowedStrengthSkill] = bool:DB_GetFieldIntByName(Result, "unlockedbstr");
+		player[playerid][unlockedSuperJumpSkill] = bool:DB_GetFieldIntByName(Result, "unlockedsjump");
+		player[playerid][unlockedCorneredSkill] = bool:DB_GetFieldIntByName(Result, "unlockedcorn");
 		/*
 		* Set the character's spawn up
 		*/

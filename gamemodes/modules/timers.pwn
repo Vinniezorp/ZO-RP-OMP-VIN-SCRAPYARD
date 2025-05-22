@@ -77,6 +77,7 @@ public unlockedBorrowedStrengthSkillActiveTimer(playerid)
 {
     player[playerid][unlockedBorrowedStrengthSkillActive] = false;
 }
+
 public TimedKick(playerid)
 {
 	Kick(playerid);

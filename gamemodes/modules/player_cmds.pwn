@@ -726,7 +726,7 @@
     {
         // Show zombie skill menu
         static const skillList[] = 
-            "HP Increase\nJump\nUnarmed Damage\nBite\nCombust\nStun\nGrab\nBorrowed Strength\nBorrowed Speed\nCornered";
+            "HP Increase\nJump\nUnarmed Damage\nBite\nCombust\nStun\nGrab\nBorrowed Strength\nSuper Jump\nCornered";
 
         Dialog_ShowCallback(playerid, using public PerkMenu<iiiis>, DIALOG_STYLE_LIST, "Zombie Perks", skillList, "Select", "Close");
     }

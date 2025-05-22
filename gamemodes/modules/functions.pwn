@@ -479,7 +479,28 @@ CreateInteriorPickup(interiorid)
 		srvInterior[interiorid][intVirWorld], srvInterior[interiorid][intWorld]);
 	return 1;
 }
+/*
+* Super Jump
+*/
+SuperJump(playerid)
+{
+    if ((GetTickCount() - player[playerid][borrowedSuperJumpAntiSpam]) < 5000)
+    {
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED,
+        "Please wait 5 seconds between uses of this command.");
+    }
+    new Float:damage = 50;
+    player[playerid][health] -= damage;
+    SetPlayerHealth(playerid, player[playerid][health]);
+    UpdateHudElementForPlayer(playerid, HUD_HEALTH);
 
+    player[playerid][borrowedSuperJumpAntiSpam] = GetTickCount();
+    SetPlayerVelocity(playerid, 0.0, 0.0, 5); 
+    SendProxMessage(playerid, COLOR_RED, 30.0, PROXY_MSG_TYPE_OTHER,
+        "Bones crack, tendons shred, the earth breaks beneath the their leap");
+
+    return 1;
+}
 /*
 * Punishment for dying
 */

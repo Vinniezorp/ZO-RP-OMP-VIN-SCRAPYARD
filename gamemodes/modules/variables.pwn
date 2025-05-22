@@ -94,10 +94,13 @@ enum E_PLAYERS
     stunAntiSpam,
     grabAntiSpam,
     borrowedStrengthAntiSpam,
+    borrowedSuperJumpAntiSpam,
     bool:unlockedGrabSkill,
     bool:unlockedBorrowedStrengthSkill,
     bool:unlockedBorrowedStrengthSkillActive,
     Float:unlockedBorrowedStrengthSkillDamage,
+    bool:unlockedSuperJumpSkill,
+    bool:unlockedCorneredSkill,
 
     /*
     * Admin fly

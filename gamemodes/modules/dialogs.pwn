@@ -69,7 +69,7 @@ public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
         "Stun",
         "Grab",
         "Borrowed Strength",
-        "Borrowed Speed",
+        "Super Jump",
         "Cornered"
     };
 
@@ -216,6 +216,38 @@ public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
 					player[playerid][ID], player[playerid][chosenChar]);
 
 				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked borrowed strength! /bstr (amount) to Sacrifice a portion of your health to deal 25% of that that amount as bonus damage per hit for the next 30 seconds. 30-second cooldown.");
+			}
+		}
+		else if(listitem == 8) //Super Jump
+		{
+			if(player[playerid][unlockedSuperJumpSkill])
+			{
+				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Super Jump skill.");
+			}
+			else
+			{
+				player[playerid][unlockedSuperJumpSkill] = true;
+				DB_ExecuteQuery(database,
+					"UPDATE characters SET unlockedsjump = '1' WHERE owner = '%d' AND name = '%q'",
+					player[playerid][ID], player[playerid][chosenChar]);
+
+				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked Super Jump! alt+shift to sacrifice 50hp for a very strong jump");
+			}
+		}
+		else if(listitem == 9) //Cornered
+		{
+			if(player[playerid][unlockedCorneredSkill])
+			{
+				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked cornered skill.");
+			}
+			else
+			{
+				player[playerid][unlockedCorneredSkill] = true;
+				DB_ExecuteQuery(database,
+					"UPDATE characters SET unlockedcorn = '1' WHERE owner = '%d' AND name = '%q'",
+					player[playerid][ID], player[playerid][chosenChar]);
+
+				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked Cornered! Damage boost when below 30 percent HP");
 			}
 		}
         else
