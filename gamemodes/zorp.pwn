@@ -326,7 +326,7 @@ public OnPlayerDamage(&playerid, &Float:amount, &issuerid, &WEAPON:weapon, &body
     //perks test 
     if(weapon == 0 && player[issuerid][unlockedUnarmedSkill]){
 		//multiply 5 with unarmed skill level (max: 25dmg bonus)
-        amount=amount+player[issuerid][unlockedUnarmedSkill]*5;
+        amount=amount+player[issuerid][unlockedUnarmedSkill]*3;
     }
     if(weapon == 0 && player[issuerid][unlockedBorrowedStrengthSkillActive]){
         amount = amount+player[issuerid][unlockedBorrowedStrengthSkillDamage];
@@ -528,16 +528,25 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
 	//zedperk hotkeys
-	if (HOLDING( KEY_WALK | KEY_JUMP )){
+	if (HOLDING( KEY_WALK | KEY_JUMP ))
+	{
 		if(player[playerid][iszombie] && player[playerid][unlockedSuperJumpSkill])
 		{
 		SuperJump(playerid);
 		}
 	}
-	if (HOLDING( KEY_WALK | KEY_AIM)){
+	if (HOLDING( KEY_WALK | KEY_AIM))
+	{
 		if(player[playerid][iszombie] && player[playerid][unlockedBiteSkill])
 		{
 		Bite(playerid);
+		}
+	}
+	if (HOLDING( KEY_WALK | KEY_FIRE))
+	{
+		if(player[playerid][iszombie] && player[playerid][unlockedStunSkill])
+		{
+		Stun(playerid);
 		}
 	}
 	//zedperk hotkeys

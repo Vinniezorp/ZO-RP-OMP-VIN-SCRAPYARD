@@ -582,6 +582,83 @@ stock TryUnlockCombustSkill(playerid)
 	SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the combust skill! When you die, your corpse explodes, dealing damage to nearby enemies.");
     return 1;
 }
+TryUnlockStunSkill(playerid)
+{
+    if(player[playerid][unlockedStunSkill])
+    {
+	SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the stun skill.");
+    return 0;
+    }
+    player[playerid][unlockedStunSkill] = true;
+    DB_ExecuteQuery(database,
+	    "UPDATE characters SET unlockedstun = '1' WHERE owner = '%d' AND name = '%q'",
+	    player[playerid][ID], player[playerid][chosenChar]);
+    SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the stun skill! alt+fire to stun other players. 30 second cooldown");
+    return 1;
+}
+
+stock Stun(playerid)
+{
+    if ((GetTickCount() - player[playerid][stunAntiSpam]) < 30000)
+    {
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "Please wait 30 seconds between uses of this command.");
+    }
+
+    new players[MAX_PLAYERS], length;
+    new Float:zombieX, Float:zombieY, Float:zombieZ;
+    GetPlayerPos(playerid, zombieX, zombieY, zombieZ);
+
+    length = GetPlayers(players, sizeof(players));
+
+    new closestCandidates[MAX_PLAYERS];
+    new candidateCount = 0;
+    new Float:closestDistance = 99999.0;
+
+    for (new i = 0; i < length; i++)
+    {
+        new target = players[i];
+        if (target == playerid || !IsPlayerConnected(target)) continue;
+
+        new Float:targetX, Float:targetY, Float:targetZ;
+        GetPlayerPos(target, targetX, targetY, targetZ);
+
+        //blackmagic
+        new Float:distance = floatsqroot( floatpower(zombieX - targetX, 2.0) + floatpower(zombieY - targetY, 2.0) + floatpower(zombieZ - targetZ, 2.0) );
+
+        if (distance <= 3.0)
+        {
+            if (floatcmp(distance, closestDistance) < 0)
+            {
+                // Found closer target
+                closestDistance = distance;
+                candidateCount = 1;
+                closestCandidates[0] = target;
+            }
+            else if (floatcmp(distance, closestDistance) == 0)
+            {
+                // Same distance as closest, add to pool
+                closestCandidates[candidateCount++] = target;
+            }
+        }
+    }
+
+    if (candidateCount == 0)
+    {
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "No valid targets nearby to stun.");
+    }
+    new target = closestCandidates[random(candidateCount)];
+
+    // Stun logic
+    player[target][health] -= 10;
+    SetPlayerHealth(target, player[target][health]);
+    UpdateHudElementForPlayer(target, HUD_HEALTH);
+    SetTimerEx("SpawnTimer", 2000, false, "d", target);
+    TogglePlayerControllable(target, false);
+
+    // Update anti-spam timer
+    player[playerid][biteAntiSpam] = GetTickCount();
+    return 1;
+}
 
 stock Combust(playerid)
 {
