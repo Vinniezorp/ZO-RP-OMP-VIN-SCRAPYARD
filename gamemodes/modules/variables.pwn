@@ -39,6 +39,7 @@ enum E_PLAYERS
     maxThirst,
     disease,
     maxDisease,
+    bool:infection,
     spawned,
     Float:pPos[4],
     plrinterior,
@@ -49,7 +50,19 @@ enum E_PLAYERS
     plrFaction,
     factionrank,
     wepSlot[13],
-
+    bool:hasDied,
+    unlockedHpIncreaseSkill,
+    bool:unlockedJumpSkill,
+    unlockedUnarmedSkill,
+    unlockedBiteSkill,
+    bool:unlockedCombustSkill,
+    bool:unlockedStunSkill,
+    bool:unlockedGrabSkill,
+    bool:unlockedBorrowedStrengthSkill,
+    bool:unlockedBorrowedStrengthSkillActive,
+    Float:unlockedBorrowedStrengthSkillDamage,
+    bool:unlockedSuperJumpSkill,
+    bool:unlockedCorneredSkill,
 	/*
 	* Not Saved
 	*/
@@ -85,6 +98,12 @@ enum E_PLAYERS
     antiMessageSpam,
     invGivePlayerId,
     engineAntiSpam,
+    biteAntiSpam,
+    stunAntiSpam,
+    grabAntiSpam,
+    borrowedStrengthAntiSpam,
+    borrowedSuperJumpAntiSpam,
+
 
     /*
     * Admin fly

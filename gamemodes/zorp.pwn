@@ -98,7 +98,7 @@ public OnGameModeInit()
 	SetVehiclePassengerDamage(true);
     SetVehicleUnoccupiedDamage(true);
     SetDisableSyncBugs(true);
-    SetDamageFeed(false);
+    SetDamageFeed(true);
 
 	/*
     * Get certain stats from the database
@@ -263,22 +263,43 @@ public OnPlayerDisconnect(playerid, reason)
 
 public OnPlayerSpawn(playerid)
 {
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL_SILENCED, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_DESERT_EAGLE, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_SHOTGUN, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_SAWNOFF_SHOTGUN, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_SPAS12_SHOTGUN, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_MICRO_UZI, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_MP5, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_AK47, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_M4, 1);
-	SetPlayerSkillLevel(playerid, WEAPONSKILL_SNIPERRIFLE, 1);
-	return 1;
-}
+	player[playerid][hasDied] = false;
+	//Check and correct gravity
+	SetPlayerSkin(playerid, player[playerid][skin]);
+	if (player[playerid][unlockedBiteSkill])
+	{
+		SetPlayerGravity(playerid, 0.005);
+	}
+	else
+	{
+		SetPlayerGravity(playerid, 0.008);
+	}
+	
+    // Set basic weapon skills to 1
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL_SILENCED, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_DESERT_EAGLE, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_SHOTGUN, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_SAWNOFF_SHOTGUN, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_SPAS12_SHOTGUN, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_MICRO_UZI, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_MP5, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_AK47, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_M4, 1);
+    SetPlayerSkillLevel(playerid, WEAPONSKILL_SNIPERRIFLE, 1);
 
+    return 1;
+}
 public OnPlayerDeath(playerid, killerid, reason)
 {
+	if(player[playerid][hasDied]){
+		return 1;
+	}
+	//combustperkcheck
+    if (player[playerid][iszombie] && player[playerid][unlockedCombustSkill])
+{
+    Combust(playerid);
+}
 	/*
 	* Kill timers and reset spawned variable as well as hide the HUD
 	*/
@@ -289,14 +310,39 @@ public OnPlayerDeath(playerid, killerid, reason)
 	KillTimer(player[playerid][fuelTimer]);
 	KillTimer(player[playerid][fillVehicleTimer]);
 	HideHudForPlayer(playerid);
-
+	// Set disease to 100
+	player[playerid][disease]=100;
+	UpdateHudElementForPlayer(playerid, HUD_DISEASE);
 	/*
 	* Set the player to spectate mode and set the timer to respawn
 	*/
+	player[playerid][hasDied] = true;
 	TogglePlayerSpectating(playerid, true);
 	GameTextForPlayer(playerid, "...Respawning...", 3500, 3);
 	SetTimerEx("RespawnAfterDeath", 3500, false, "d", playerid);
 	return 1;
+}
+
+
+public OnPlayerDamage(&playerid, &Float:amount, &issuerid, &WEAPON:weapon, &bodypart)
+{
+    if(weapon == 0){
+        amount=10;
+    }
+    //perks test 
+    if(weapon == 0 && player[issuerid][unlockedUnarmedSkill]){
+		//multiply 5 with unarmed skill level (max: 25dmg bonus)
+        amount=amount+player[issuerid][unlockedUnarmedSkill]*3;
+    }
+    if(weapon == 0 && player[issuerid][unlockedBorrowedStrengthSkillActive]){
+        amount = amount+player[issuerid][unlockedBorrowedStrengthSkillDamage];
+    }
+	if(weapon == 0 && player[issuerid][unlockedCorneredSkill] && player[issuerid][health] < player[issuerid][maxHealth] * 0.3){
+		SendProxMessage(playerid, COLOR_RP_PURPLE, 30.0, PROXY_MSG_TYPE_OTHER, "A near-death desperation feeds savage blows.");
+		amount+= 20;
+	}
+    //perks test
+    return 1;
 }
 
 public OnPlayerDamageDone(playerid, Float:amount, issuerid, WEAPON:weapon, bodypart)
@@ -488,6 +534,36 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 
 public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
+	//zedperk hotkeys
+	if (HOLDING( KEY_WALK | KEY_JUMP ))
+	{
+		if(player[playerid][iszombie] && player[playerid][unlockedSuperJumpSkill])
+		{
+		SuperJump(playerid);
+		}
+	}
+	if (HOLDING( KEY_WALK | KEY_AIM))
+	{
+		if(player[playerid][iszombie] && player[playerid][unlockedBiteSkill])
+		{
+		Bite(playerid);
+		}
+	}
+	if (HOLDING( KEY_WALK | KEY_FIRE))
+	{
+		if(player[playerid][iszombie] && player[playerid][unlockedStunSkill])
+		{
+		Stun(playerid);
+		}
+	}
+	if (HOLDING( KEY_WALK | KEY_CROUCH))
+	{
+		if(player[playerid][iszombie] && player[playerid][unlockedGrabSkill])
+		{
+		Grab(playerid);
+		}
+	}
+	//zedperk hotkeys
 	if(IsKeyJustDown(KEY_SPRINT, newkeys, oldkeys))
 	{
 	    StopLoopingAnim(playerid);

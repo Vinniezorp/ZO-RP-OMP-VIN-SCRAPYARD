@@ -173,6 +173,17 @@ OnPlayerCharacterDataLoaded(playerid)
 		player[playerid][wepSlot][11] = DB_GetFieldIntByName(Result, "wepslot11");
 		player[playerid][wepSlot][12] = DB_GetFieldIntByName(Result, "wepslot12");
 
+		// Load perks
+		player[playerid][unlockedJumpSkill] = bool:DB_GetFieldIntByName(Result, "unlockedjump");
+		player[playerid][unlockedUnarmedSkill] = DB_GetFieldIntByName(Result, "unlockedunarmed");
+		player[playerid][unlockedBiteSkill] = bool:DB_GetFieldIntByName(Result, "unlockedbite");
+		player[playerid][unlockedCombustSkill] = bool:DB_GetFieldIntByName(Result, "unlockedcombust");
+		player[playerid][unlockedStunSkill] = bool:DB_GetFieldIntByName(Result, "unlockedstun");
+		player[playerid][unlockedGrabSkill] = bool:DB_GetFieldIntByName(Result, "unlockedgrab");
+		player[playerid][unlockedBorrowedStrengthSkill] = bool:DB_GetFieldIntByName(Result, "unlockedbstr");
+		player[playerid][unlockedSuperJumpSkill] = bool:DB_GetFieldIntByName(Result, "unlockedsjump");
+		player[playerid][unlockedCorneredSkill] = bool:DB_GetFieldIntByName(Result, "unlockedcorn");
+		player[playerid][unlockedHpIncreaseSkill] = DB_GetFieldIntByName(Result, "unlockedhpinc");
 		/*
 		* Set the character's spawn up
 		*/

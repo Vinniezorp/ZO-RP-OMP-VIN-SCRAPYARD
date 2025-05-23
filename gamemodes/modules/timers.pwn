@@ -28,7 +28,11 @@ forward AntiMessageSpamTimer(playerid);
 forward LoginCamera(playerid);
 forward HideInfoBox(playerid);
 forward RespawnAfterDeath(playerid);
-
+forward unlockedBorrowedStrengthSkillActiveTimer(playerid);
+forward stunCooldownTimer(playerid);
+forward biteCooldownTimer(playerid);
+forward grabCooldownTimer(playerid);
+forward superJumpCooldownTimer(playerid);
 /*
 * Timer Functions
 */
@@ -71,6 +75,31 @@ public ServerWeather()
 public SpawnTimer(playerid)
 {
     TogglePlayerControllable(playerid, true);
+}
+
+public stunCooldownTimer(playerid)
+{
+    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Stun cooldown expired.");
+}
+public biteCooldownTimer(playerid)
+{
+    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Bite cooldown expired.");
+}
+
+public grabCooldownTimer(playerid)
+{
+    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Grab cooldown expired.");
+}
+
+public unlockedBorrowedStrengthSkillActiveTimer(playerid)
+{
+    player[playerid][unlockedBorrowedStrengthSkillActive] = false;
+    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Borrowed strength cooldown expired.");
+}
+
+public superJumpCooldownTimer(playerid)
+{
+    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Super jump cooldown expired.");
 }
 
 public TimedKick(playerid)
@@ -293,20 +322,31 @@ public ThirstTimer(playerid)
 
 public DiseaseTimer(playerid)
 {
-    if(player[playerid][disease] == 0)
+    new Float:diseaseLevel = float(player[playerid][disease]);
+
+    if (diseaseLevel < 90.0)
     {
+        new Float:damageFloat = 25.0 * ((90.0 - diseaseLevel) / 90.0);
+        new damage = floatround(damageFloat, floatround_floor);
+
+        if (damage > 0)
+        {
+            player[playerid][health] -= damage;
+            if (player[playerid][health] < 0)
+                player[playerid][health] = 0;
+            SetPlayerHealth(playerid, player[playerid][health]);
+        }
+
         UpdateHudElementForPlayer(playerid, HUD_DISEASE);
-        player[playerid][health] = player[playerid][health] - 3;
-        SetPlayerHealth(playerid, player[playerid][health]);
         UpdateHudElementForPlayer(playerid, HUD_HEALTH);
 
         ClearAnimations(playerid);
-	    OnePlayAnim(playerid, "FOOD", "EAT_Vomit_P", 3.0, 0, 0, 0, 0, 0);
-
-        SendClientMessage(playerid, COLOR_RED, "You are very sick, you should find some medicine soon.");
+        OnePlayAnim(playerid, "FOOD", "EAT_Vomit_P", 3.0, 0, 0, 0, 0, 0);
+        SendClientMessage(playerid, COLOR_RED, "You are sick, you should find some medicine soon.");
     }
     return 1;
 }
+
 
 public FuelTimer(playerid, vehicleid)
 {
@@ -439,7 +479,7 @@ public RespawnAfterDeath(playerid)
     SetPlayerSkin(playerid, player[playerid][skin]);
     
     /*Reduce the xp and inv items by 20% with the exception for weapons and key items. Send on-death message*/
-	ReducePlayerInventoryAndExp(playerid);
+	//ReducePlayerInventoryAndExp(playerid);
     UpdateHudElementForPlayer(playerid, HUD_INFO);
     return 1;
 }

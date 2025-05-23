@@ -52,6 +52,99 @@ forward CreateItemIsUsable(playerid, dialogid, response, listitem, string:inputt
 forward CreateItemMaxResource(playerid, dialogid, response, listitem, string:inputtext[]);
 forward EditLootTableChanceNode(playerid, dialogid, response, listitem, string:inputtext[]);
 
+//perktests
+forward PerkMenu(playerid, dialogid, response, listitem, string:inputtext[]);
+forward SetHealth(playerid, Float:health);
+public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
+{
+    if(!response)
+        return 1;
+
+    static const skillNames[][] = {
+        "HP Increase",
+        "Jump",
+        "Unarmed Damage",
+        "Bite",
+        "Combust",
+        "Stun",
+        "Grab",
+        "Borrowed Strength",
+        "Super Jump",
+        "Cornered"
+    };
+
+    if(listitem >= 0 && listitem < sizeof(skillNames))
+    {
+        new skillName[32];
+        format(skillName, sizeof(skillName), "%s", skillNames[listitem]);
+        SendClientMessage(playerid, COLOR_SYSTEM, "You selected skill: %s", skillName);
+
+        if(listitem == 0) // HP Increase
+        {
+			TryUpgradeHpSkill(playerid);
+    		return 1;
+		}
+		else if(listitem == 1) // Jump
+		{
+			TryUpgradeJumpSkill(playerid);
+			return 1;
+		}
+		else if(listitem == 2) // Unarmed
+		{
+			TryUpgradeUnarmedSkill(playerid);
+			return 1;
+		}
+		else if(listitem == 3) // Bite
+		{
+			TryUpgradeBiteSkill(playerid);
+			return 1;
+		}
+		else if(listitem == 4) //combust
+		{
+			TryUnlockCombustSkill(playerid);
+			return 1;
+			
+		}
+		else if (listitem == 5) //Stun
+		{
+			TryUnlockStunSkill(playerid);
+			return 1;
+		}
+		else if (listitem == 6) //Grab
+		{
+			TryUnlockGrabSkill(playerid);
+			return 1;
+		}
+		else if(listitem == 7) //Borrowed Strength
+		{
+			TryUnlockBorrowedStrengthSkill(playerid);
+			return 1;
+		}
+		else if(listitem == 8) //Super Jump
+		{
+			TryUnlockSuperJumpSkill(playerid);
+			return 1;
+		}
+		else if(listitem == 9) //Cornered
+		{
+			TryUnlockCorneredSkill(playerid);
+			return 1;
+		}
+        else
+        {
+            // Placeholder for other skill logic
+            SendClientMessage(playerid, COLOR_YELLOW, "Skill effect not implemented yet.");
+        }
+    }
+    else
+    {
+        SendClientMessage(playerid, COLOR_SYSTEM, "Invalid selection.");
+    }
+
+    return 1;
+}
+//skilltests
+
 /*
 * Dialog Callbacks
 */
