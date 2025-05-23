@@ -50,6 +50,7 @@ enum E_PLAYERS
     plrFaction,
     factionrank,
     wepSlot[13],
+    bool:hasDied,
     unlockedHpIncreaseSkill,
     bool:unlockedJumpSkill,
     unlockedUnarmedSkill,

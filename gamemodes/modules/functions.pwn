@@ -492,13 +492,17 @@ TryUpgradeBiteSkill(playerid)
 		player[playerid][ID], player[playerid][chosenChar]);
     switch (player[playerid][unlockedBiteSkill])
     {
-        case 0: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your bite carries a faint trace of sickness, leaving victims weak and weary.");
-        case 1: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your jaws infect flesh, sowing festering sores that drain the life slowly."); 
-        case 2: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your bite spreads vile disease, twisting flesh and mind alike with creeping rot."); 
-        case 3: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your teeth inject a venomous plague, corrupting flesh and bone with agonizing speed."); 
-        case 4: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your savage bite spreads unstoppable contagion, dooming victims to a gruesome, agonizing death.");
+        case 0: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your bite carries a faint trace of sickness, leaving victims weak and weary."),
+                SendClientMessage(playerid, COLOR_GREEN, "Bite upgrade 1/5. Hold Alt+Aim near a human to bite them.");
+        case 1: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your jaws infect flesh, sowing festering sores that drain the life slowly."),
+                SendClientMessage(playerid, COLOR_GREEN, "Bite upgrade 2/5. Hold Alt+Aim near a human to bite them.");
+        case 2: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your bite spreads vile disease, twisting flesh and mind alike with creeping rot."),
+                SendClientMessage(playerid, COLOR_GREEN, "Bite upgrade 3/5. Hold Alt+Aim near a human to bite them.");
+        case 3: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your teeth inject a venomous plague, corrupting flesh and bone with agonizing speed."),
+                SendClientMessage(playerid, COLOR_GREEN, "Bite upgrade 4/5. Hold Alt+Aim near a human to bite them.");
+        case 4: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your savage bite spreads unstoppable contagion, dooming victims to a gruesome, agonizing death."),
+                SendClientMessage(playerid, COLOR_GREEN, "Bite upgrade 5/5. Hold Alt+Aim near a human to bite them.");
     }
-	SendClientMessage(playerid, COLOR_GREEN, "You have upgraded the bite skill! You can use alt+aim to bite the nearest human close to you and inflict disease on them.");
     player[playerid][unlockedBiteSkill]++;
     return 1;
 }
@@ -515,14 +519,17 @@ stock TryUpgradeUnarmedSkill(playerid)
 
     switch (player[playerid][unlockedUnarmedSkill])
     {
-        case 0: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your claws scrape with more bite, tearing flesh just a little deeper.");
-        case 1: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your strikes rend sinew and bone with growing hunger."); 
-        case 2: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your blows now crush and shatter, like the dead rising relentless."); 
-        case 3: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your claws rend through armor and flesh, driven by unholy fury."); 
-        case 4: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your hands become weapons of decay, pulverizing all in your ravenous path.");
+        case 0: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your claws scrape with more bite, tearing flesh just a little deeper."),
+                SendClientMessage(playerid, COLOR_GREEN, "Unarmed upgrade 1/5");
+        case 1: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your strikes rend sinew and bone with growing hunger."),
+                SendClientMessage(playerid, COLOR_GREEN, "Unarmed upgrade 2/5");
+        case 2: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your blows now crush and shatter, like the dead rising relentless."),
+                SendClientMessage(playerid, COLOR_GREEN, "Unarmed upgrade 3/5");
+        case 3: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your claws rend through armor and flesh, driven by unholy fury."),
+                SendClientMessage(playerid, COLOR_GREEN, "Unarmed upgrade 4/5");
+        case 4: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your hands become weapons of decay, pulverizing all in your ravenous path."),
+                SendClientMessage(playerid, COLOR_GREEN, "Unarmed upgrade 5/5");
     }
-	SendClientMessage(playerid, COLOR_GREEN, "You have upgraded the Unarmed Damage skill! You can now Punch harder.");
-    
     player[playerid][unlockedUnarmedSkill]++;
     return 1;
 }
@@ -554,11 +561,16 @@ stock TryUpgradeHpSkill(playerid)
 
     switch (player[playerid][unlockedHpIncreaseSkill])
     {
-        case 0: SendClientMessage(playerid, COLOR_RP_PURPLE, "A faint pulse of strength returns to your limbs.");
-        case 1: SendClientMessage(playerid, COLOR_RP_PURPLE, "You steady yourself, feeling less fragile."); 
-        case 2: SendClientMessage(playerid, COLOR_RP_PURPLE, "A dark vigor spreads through your decaying form."); 
-        case 3: SendClientMessage(playerid, COLOR_RP_PURPLE, "You stand taller, the rot no longer slowing you."); 
-        case 4: SendClientMessage(playerid, COLOR_RP_PURPLE, "You are reborn in death — relentless, unbreakable.");
+        case 0: SendClientMessage(playerid, COLOR_RP_PURPLE, "A faint pulse of strength returns to your limbs."),
+                SendClientMessage(playerid, COLOR_GREEN, "HP increase 1/5");
+        case 1: SendClientMessage(playerid, COLOR_RP_PURPLE, "You steady yourself, feeling less fragile."),
+                SendClientMessage(playerid, COLOR_GREEN, "HP increase 2/5");
+        case 2: SendClientMessage(playerid, COLOR_RP_PURPLE, "A dark vigor spreads through your decaying form."),
+                SendClientMessage(playerid, COLOR_GREEN, "HP increase 3/5");
+        case 3: SendClientMessage(playerid, COLOR_RP_PURPLE, "You stand taller, the rot no longer slowing you."),
+                SendClientMessage(playerid, COLOR_GREEN, "HP increase 4/5");
+        case 4: SendClientMessage(playerid, COLOR_RP_PURPLE, "You are reborn in death - relentless, unbreakable."),
+                SendClientMessage(playerid, COLOR_GREEN, "HP increase 5/5");
     }
 
     player[playerid][unlockedHpIncreaseSkill]++;
@@ -602,7 +614,7 @@ stock TryUnlockCombustSkill(playerid)
 		"UPDATE characters SET unlockedcombust = '1' WHERE owner = '%d' AND name = '%q'",
 		player[playerid][ID], player[playerid][chosenChar]);
 
-	SendClientMessage(playerid, COLOR_RP_PURPLE, "A volatile change brews within you… your final moments will not go unnoticed.");
+	SendClientMessage(playerid, COLOR_RP_PURPLE, "A volatile change brews within you... your final moments will not go unnoticed.");
     SendClientMessage(playerid, COLOR_GREEN, "On Death: Deal damage to players around you");
     return 1;
 }
@@ -617,7 +629,7 @@ TryUnlockStunSkill(playerid)
     DB_ExecuteQuery(database,
 	    "UPDATE characters SET unlockedstun = '1' WHERE owner = '%d' AND name = '%q'",
 	    player[playerid][ID], player[playerid][chosenChar]);
-    SendClientMessage(playerid, COLOR_RP_PURPLE, "You master the art of sudden impact — halting prey with a brutal, staggering blow.");
+    SendClientMessage(playerid, COLOR_RP_PURPLE, "The infection mutates. Newfound strength in your arms. Snap Impact - halting prey with a brutal, staggering blow.");
     SendClientMessage(playerid, COLOR_GREEN, "alt+fire, 30s cooldown");
     return 1;
 }
@@ -678,7 +690,7 @@ TryUnlockCorneredSkill(playerid)
     DB_ExecuteQuery(database,
 	    "UPDATE characters SET unlockedcorn = '1' WHERE owner = '%d' AND name = '%q'",
     player[playerid][ID], player[playerid][chosenChar]);
-    SendClientMessage(playerid, COLOR_RP_PURPLE, "Near death’s grasp, your desperation fuels a deadly, relentless assault.");
+    SendClientMessage(playerid, COLOR_RP_PURPLE, "Near deaths grasp, your desperation fuels a deadly, relentless assault.");
     SendClientMessage(playerid, COLOR_GREEN, "Damage boost when below 30 percent HP");
     return 1;
 }
@@ -740,7 +752,7 @@ stock Grab(playerid)
     // Pull the target to the grabber's position
     SetPlayerPos(target, grabberX, grabberY+1, grabberZ);
     SendPlayerServerMessage(target, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You have been grabbed!");
-
+    SendProxMessage(playerid, COLOR_RP_PURPLE, 30.0, PROXY_MSG_TYPE_OTHER, "Tendrils burst out of the infected, pulling in their prey.");
     // Anti-spam timer
     player[playerid][grabAntiSpam] = GetTickCount();
     return 1;
@@ -803,6 +815,7 @@ stock Stun(playerid)
     UpdateHudElementForPlayer(target, HUD_HEALTH);
     SetTimerEx("SpawnTimer", 2000, false, "d", target);
     TogglePlayerControllable(target, false);
+    SendProxMessage(playerid, COLOR_RP_PURPLE, 30.0, PROXY_MSG_TYPE_OTHER, "The infected crashes into their victim with overwhelming force, leaving them dazed.");
     SendPlayerServerMessage(target, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You have been stunned!");
 
     // Update anti-spam timer

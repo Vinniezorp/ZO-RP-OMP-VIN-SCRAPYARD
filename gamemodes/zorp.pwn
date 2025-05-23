@@ -263,7 +263,9 @@ public OnPlayerDisconnect(playerid, reason)
 
 public OnPlayerSpawn(playerid)
 {
+	player[playerid][hasDied] = false;
 	//Check and correct gravity
+	SetPlayerSkin(playerid, player[playerid][skin]);
 	if (player[playerid][unlockedBiteSkill])
 	{
 		SetPlayerGravity(playerid, 0.005);
@@ -290,6 +292,9 @@ public OnPlayerSpawn(playerid)
 }
 public OnPlayerDeath(playerid, killerid, reason)
 {
+	if(player[playerid][hasDied]){
+		return 1;
+	}
 	//combustperkcheck
     if (player[playerid][iszombie] && player[playerid][unlockedCombustSkill])
 {
@@ -311,6 +316,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 	/*
 	* Set the player to spectate mode and set the timer to respawn
 	*/
+	player[playerid][hasDied] = true;
 	TogglePlayerSpectating(playerid, true);
 	GameTextForPlayer(playerid, "...Respawning...", 3500, 3);
 	SetTimerEx("RespawnAfterDeath", 3500, false, "d", playerid);
@@ -332,6 +338,7 @@ public OnPlayerDamage(&playerid, &Float:amount, &issuerid, &WEAPON:weapon, &body
         amount = amount+player[issuerid][unlockedBorrowedStrengthSkillDamage];
     }
 	if(weapon == 0 && player[issuerid][unlockedCorneredSkill] && player[issuerid][health] < player[issuerid][maxHealth] * 0.3){
+		SendProxMessage(playerid, COLOR_RP_PURPLE, 30.0, PROXY_MSG_TYPE_OTHER, "A near-death desperation feeds savage blows.");
 		amount+= 20;
 	}
     //perks test
