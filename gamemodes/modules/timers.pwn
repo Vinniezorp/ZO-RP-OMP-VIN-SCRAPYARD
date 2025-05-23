@@ -29,6 +29,10 @@ forward LoginCamera(playerid);
 forward HideInfoBox(playerid);
 forward RespawnAfterDeath(playerid);
 forward unlockedBorrowedStrengthSkillActiveTimer(playerid);
+forward stunCooldownTimer(playerid);
+forward biteCooldownTimer(playerid);
+forward grabCooldownTimer(playerid);
+forward superJumpCooldownTimer(playerid);
 /*
 * Timer Functions
 */
@@ -73,9 +77,29 @@ public SpawnTimer(playerid)
     TogglePlayerControllable(playerid, true);
 }
 
+public stunCooldownTimer(playerid)
+{
+    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Stun cooldown expired.");
+}
+public biteCooldownTimer(playerid)
+{
+    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Bite cooldown expired.");
+}
+
+public grabCooldownTimer(playerid)
+{
+    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Grab cooldown expired.");
+}
+
 public unlockedBorrowedStrengthSkillActiveTimer(playerid)
 {
     player[playerid][unlockedBorrowedStrengthSkillActive] = false;
+    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Borrowed strength cooldown expired.");
+}
+
+public superJumpCooldownTimer(playerid)
+{
+    SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Super jump cooldown expired.");
 }
 
 public TimedKick(playerid)

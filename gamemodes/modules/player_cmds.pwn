@@ -793,7 +793,6 @@
         SetPlayerHealth(playerid, player[playerid][health]);
         UpdateHudElementForPlayer(playerid, HUD_HEALTH);
         player[playerid][borrowedStrengthAntiSpam] = GetTickCount();
-
         SendProxMessage(playerid, COLOR_RP_PURPLE, 30.0, PROXY_MSG_TYPE_OTHER,
             "channels their strength through blood sacrifice, becoming momentarily stronger.");
 

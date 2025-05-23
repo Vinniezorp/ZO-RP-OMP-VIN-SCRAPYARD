@@ -754,6 +754,7 @@ stock Grab(playerid)
     SendPlayerServerMessage(target, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You have been grabbed!");
     SendProxMessage(playerid, COLOR_RP_PURPLE, 30.0, PROXY_MSG_TYPE_OTHER, "Tendrils burst out of the infected, pulling in their prey.");
     // Anti-spam timer
+    SetTimerEx("grabCooldownTimer", 30000, false, "d", playerid);
     player[playerid][grabAntiSpam] = GetTickCount();
     return 1;
 }    
@@ -817,7 +818,7 @@ stock Stun(playerid)
     TogglePlayerControllable(target, false);
     SendProxMessage(playerid, COLOR_RP_PURPLE, 30.0, PROXY_MSG_TYPE_OTHER, "The infected crashes into their victim with overwhelming force, leaving them dazed.");
     SendPlayerServerMessage(target, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You have been stunned!");
-
+    SetTimerEx("stunCooldownTimer", 30000, false, "d", playerid);
     // Update anti-spam timer
     player[playerid][stunAntiSpam] = GetTickCount();
     return 1;
@@ -918,8 +919,12 @@ Bite(playerid)
 
     UpdateHudElementForPlayer(target, HUD_HEALTH);
     UpdateHudElementForPlayer(target, HUD_DISEASE);
+    SendProxMessage(playerid, COLOR_RP_PURPLE, 30.0, PROXY_MSG_TYPE_OTHER,
+        "Fractured teeth pierce flesh and inoculate disease.");
+
     SendPlayerServerMessage(target, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Something rips a chunk out of you!");
     // Update anti-spam timer
+    SetTimerEx("biteCooldownTimer", 15000, false, "d", playerid);
     player[playerid][biteAntiSpam] = GetTickCount();
     return 1;
 }
@@ -938,6 +943,7 @@ SuperJump(playerid)
 
     player[playerid][borrowedSuperJumpAntiSpam] = GetTickCount();
     SetPlayerVelocity(playerid, 0.0, 0.0, 5); 
+    SetTimerEx("superJumpCooldownTimer", 5000, false, "d", playerid);
     SendProxMessage(playerid, COLOR_RED, 30.0, PROXY_MSG_TYPE_OTHER,
         "Bones crack, tendons shred, the earth breaks beneath their leap");
 
