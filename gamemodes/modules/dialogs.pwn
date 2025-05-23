@@ -112,67 +112,23 @@ public PerkMenu(playerid, dialogid, response, listitem, string:inputtext[])
 		}
 		else if (listitem == 6) //Grab
 		{
-			if(player[playerid][unlockedGrabSkill])
-			{
-				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the grab skill.");
-			}
-			else
-			{
-				player[playerid][unlockedGrabSkill] = true;
-				DB_ExecuteQuery(database,
-					"UPDATE characters SET unlockedgrab = '1' WHERE owner = '%d' AND name = '%q'",
-					player[playerid][ID], player[playerid][chosenChar]);
-
-				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the grab skill! /grab (id) to grab other players to you. 30 second cooldown");
-			}
+			TryUnlockGrabSkill(playerid);
+			return 1;
 		}
 		else if(listitem == 7) //Borrowed Strength
 		{
-			if(player[playerid][unlockedBorrowedStrengthSkill])
-			{
-				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Borrowed Strength skill.");
-			}
-			else
-			{
-				player[playerid][unlockedBorrowedStrengthSkill] = true;
-				DB_ExecuteQuery(database,
-					"UPDATE characters SET unlockedbstr = '1' WHERE owner = '%d' AND name = '%q'",
-					player[playerid][ID], player[playerid][chosenChar]);
-
-				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked borrowed strength! /bstr (amount) to Sacrifice a portion of your health to deal 25% of that that amount as bonus damage per hit for the next 30 seconds. 30-second cooldown.");
-			}
+			TryUnlockBorrowedStrengthSkill(playerid);
+			return 1;
 		}
 		else if(listitem == 8) //Super Jump
 		{
-			if(player[playerid][unlockedSuperJumpSkill])
-			{
-				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Super Jump skill.");
-			}
-			else
-			{
-				player[playerid][unlockedSuperJumpSkill] = true;
-				DB_ExecuteQuery(database,
-					"UPDATE characters SET unlockedsjump = '1' WHERE owner = '%d' AND name = '%q'",
-					player[playerid][ID], player[playerid][chosenChar]);
-
-				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked Super Jump! alt+shift to sacrifice 50hp for a very strong jump");
-			}
+			TryUnlockSuperJumpSkill(playerid);
+			return 1;
 		}
 		else if(listitem == 9) //Cornered
 		{
-			if(player[playerid][unlockedCorneredSkill])
-			{
-				SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked cornered skill.");
-			}
-			else
-			{
-				player[playerid][unlockedCorneredSkill] = true;
-				DB_ExecuteQuery(database,
-					"UPDATE characters SET unlockedcorn = '1' WHERE owner = '%d' AND name = '%q'",
-					player[playerid][ID], player[playerid][chosenChar]);
-
-				SendClientMessage(playerid, COLOR_GREEN, "You have unlocked Cornered! Damage boost when below 30 percent HP");
-			}
+			TryUnlockCorneredSkill(playerid);
+			return 1;
 		}
         else
         {

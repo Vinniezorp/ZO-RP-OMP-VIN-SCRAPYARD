@@ -549,6 +549,13 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		Stun(playerid);
 		}
 	}
+	if (HOLDING( KEY_WALK | KEY_CROUCH))
+	{
+		if(player[playerid][iszombie] && player[playerid][unlockedGrabSkill])
+		{
+		Grab(playerid);
+		}
+	}
 	//zedperk hotkeys
 	if(IsKeyJustDown(KEY_SPRINT, newkeys, oldkeys))
 	{

@@ -490,8 +490,15 @@ TryUpgradeBiteSkill(playerid)
     DB_ExecuteQuery(database,
 		"UPDATE characters SET unlockedbite = unlockedbite +1 WHERE owner = '%d' AND name = '%q'",
 		player[playerid][ID], player[playerid][chosenChar]);
-
-	SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the bite skill! You can now use alt+rightclick to bite the nearest human close to you and inflict disease on them.");
+    switch (player[playerid][unlockedBiteSkill])
+    {
+        case 0: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your bite carries a faint trace of sickness, leaving victims weak and weary.");
+        case 1: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your jaws infect flesh, sowing festering sores that drain the life slowly."); 
+        case 2: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your bite spreads vile disease, twisting flesh and mind alike with creeping rot."); 
+        case 3: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your teeth inject a venomous plague, corrupting flesh and bone with agonizing speed."); 
+        case 4: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your savage bite spreads unstoppable contagion, dooming victims to a gruesome, agonizing death.");
+    }
+	SendClientMessage(playerid, COLOR_GREEN, "You have upgraded the bite skill! You can use alt+aim to bite the nearest human close to you and inflict disease on them.");
     player[playerid][unlockedBiteSkill]++;
     return 1;
 }
@@ -506,8 +513,16 @@ stock TryUpgradeUnarmedSkill(playerid)
 		"UPDATE characters SET unlockedunarmed = unlockedunarmed + 1 WHERE owner = '%d' AND name = '%q'",
 		player[playerid][ID], player[playerid][chosenChar]);
 
+    switch (player[playerid][unlockedUnarmedSkill])
+    {
+        case 0: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your claws scrape with more bite, tearing flesh just a little deeper.");
+        case 1: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your strikes rend sinew and bone with growing hunger."); 
+        case 2: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your blows now crush and shatter, like the dead rising relentless."); 
+        case 3: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your claws rend through armor and flesh, driven by unholy fury."); 
+        case 4: SendClientMessage(playerid, COLOR_RP_PURPLE, "Your hands become weapons of decay, pulverizing all in your ravenous path.");
+    }
 	SendClientMessage(playerid, COLOR_GREEN, "You have upgraded the Unarmed Damage skill! You can now Punch harder.");
-
+    
     player[playerid][unlockedUnarmedSkill]++;
     return 1;
 }
@@ -537,7 +552,14 @@ stock TryUpgradeHpSkill(playerid)
     // Update HUD
     UpdateHudElementForPlayer(playerid, HUD_HEALTH);
 
-    SendClientMessage(playerid, COLOR_GREEN, "Your max health has increased by 10%, and your current health was restored!");
+    switch (player[playerid][unlockedHpIncreaseSkill])
+    {
+        case 0: SendClientMessage(playerid, COLOR_RP_PURPLE, "A faint pulse of strength returns to your limbs.");
+        case 1: SendClientMessage(playerid, COLOR_RP_PURPLE, "You steady yourself, feeling less fragile."); 
+        case 2: SendClientMessage(playerid, COLOR_RP_PURPLE, "A dark vigor spreads through your decaying form."); 
+        case 3: SendClientMessage(playerid, COLOR_RP_PURPLE, "You stand taller, the rot no longer slowing you."); 
+        case 4: SendClientMessage(playerid, COLOR_RP_PURPLE, "You are reborn in death — relentless, unbreakable.");
+    }
 
     player[playerid][unlockedHpIncreaseSkill]++;
 
@@ -562,7 +584,8 @@ stock TryUpgradeJumpSkill(playerid)
 		"UPDATE characters SET unlockedjump = '1' WHERE owner = '%d' AND name = '%q'",
 		player[playerid][ID], player[playerid][chosenChar]);
 
-	SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the Jump skill! You can now jump higher.");
+	SendClientMessage(playerid, COLOR_RP_PURPLE, "Rotting muscles shift and tighten - your body learns to spring forward..");
+    SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the jump skill! You can now now jump higher.");
     return 1;
 }
 
@@ -579,7 +602,8 @@ stock TryUnlockCombustSkill(playerid)
 		"UPDATE characters SET unlockedcombust = '1' WHERE owner = '%d' AND name = '%q'",
 		player[playerid][ID], player[playerid][chosenChar]);
 
-	SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the combust skill! When you die, your corpse explodes, dealing damage to nearby enemies.");
+	SendClientMessage(playerid, COLOR_RP_PURPLE, "A volatile change brews within you… your final moments will not go unnoticed.");
+    SendClientMessage(playerid, COLOR_GREEN, "On Death: Deal damage to players around you");
     return 1;
 }
 TryUnlockStunSkill(playerid)
@@ -593,9 +617,134 @@ TryUnlockStunSkill(playerid)
     DB_ExecuteQuery(database,
 	    "UPDATE characters SET unlockedstun = '1' WHERE owner = '%d' AND name = '%q'",
 	    player[playerid][ID], player[playerid][chosenChar]);
-    SendClientMessage(playerid, COLOR_GREEN, "You have unlocked the stun skill! alt+fire to stun other players. 30 second cooldown");
+    SendClientMessage(playerid, COLOR_RP_PURPLE, "You master the art of sudden impact — halting prey with a brutal, staggering blow.");
+    SendClientMessage(playerid, COLOR_GREEN, "alt+fire, 30s cooldown");
     return 1;
 }
+TryUnlockGrabSkill(playerid)
+{
+    if(player[playerid][unlockedGrabSkill])
+	{
+		SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the grab skill.");
+        return 0;
+	}
+	player[playerid][unlockedGrabSkill] = true;
+	DB_ExecuteQuery(database,
+		"UPDATE characters SET unlockedgrab = '1' WHERE owner = '%d' AND name = '%q'",
+		player[playerid][ID], player[playerid][chosenChar]);
+	SendClientMessage(playerid, COLOR_RP_PURPLE, "Twisted tendrils writhe from your flesh, hunting prey beyond your reach. (alt+crouch)");
+    SendClientMessage(playerid, COLOR_GREEN, "alt+crouch to pull the furthest player to you from a max range of 10. 30s cooldown");
+    return 1;
+}
+TryUnlockBorrowedStrengthSkill(playerid)
+{
+    if(player[playerid][unlockedBorrowedStrengthSkill])
+    {
+    SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Borrowed Strength skill.");
+    return 0;
+    }
+    player[playerid][unlockedBorrowedStrengthSkill] = true;
+    DB_ExecuteQuery(database,
+	    "UPDATE characters SET unlockedbstr = '1' WHERE owner = '%d' AND name = '%q'",
+        player[playerid][ID], player[playerid][chosenChar]);
+    
+    SendClientMessage(playerid, COLOR_RP_PURPLE, "Rip life from your veins to fuel savage blows, but dont push past your limits. ");
+    SendClientMessage(playerid, COLOR_GREEN, "/bstr (amount of hp) to gain gain damage equal to 25 percent of health lost.");
+    return 1;
+}
+TryUnlockSuperJumpSkill(playerid)
+{
+    if(player[playerid][unlockedSuperJumpSkill])
+    {
+        SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked the Super Jump skill.");
+        return 0;
+    }
+    player[playerid][unlockedSuperJumpSkill] = true;
+    DB_ExecuteQuery(database,
+	    "UPDATE characters SET unlockedsjump = '1' WHERE owner = '%d' AND name = '%q'",
+    player[playerid][ID], player[playerid][chosenChar]);
+    SendClientMessage(playerid, COLOR_RP_PURPLE, "A new instinct awakens within you: the ability to defy gravity itself. ");
+    SendClientMessage(playerid, COLOR_GREEN, "alt+shift to sacrifice 50hp for a very strong jump");
+    return 1;
+}
+TryUnlockCorneredSkill(playerid)
+{
+    if(player[playerid][unlockedCorneredSkill])
+    {
+        SendClientMessage(playerid, COLOR_YELLOW, "You have already unlocked cornered skill.");
+        return 0;
+    }
+    player[playerid][unlockedCorneredSkill] = true;
+    DB_ExecuteQuery(database,
+	    "UPDATE characters SET unlockedcorn = '1' WHERE owner = '%d' AND name = '%q'",
+    player[playerid][ID], player[playerid][chosenChar]);
+    SendClientMessage(playerid, COLOR_RP_PURPLE, "Near death’s grasp, your desperation fuels a deadly, relentless assault.");
+    SendClientMessage(playerid, COLOR_GREEN, "Damage boost when below 30 percent HP");
+    return 1;
+}
+stock Grab(playerid)
+{
+    if ((GetTickCount() - player[playerid][grabAntiSpam]) < 30000)
+    {
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "Please wait 30 seconds between uses of this command.");
+    }
+
+    new players[MAX_PLAYERS], length;
+    new Float:grabberX, Float:grabberY, Float:grabberZ;
+    GetPlayerPos(playerid, grabberX, grabberY, grabberZ);
+
+    length = GetPlayers(players, sizeof(players));
+
+    new furthestCandidates[MAX_PLAYERS];
+    new candidateCount = 0;
+    new Float:maxDistance = 0.0;
+
+    for (new i = 0; i < length; i++)
+    {
+        new target = players[i];
+        if (target == playerid || !IsPlayerConnected(target) || player[target][iszombie] == 1) continue;
+
+        new Float:targetX, Float:targetY, Float:targetZ;
+        GetPlayerPos(target, targetX, targetY, targetZ);
+
+        new Float:distance = floatsqroot(
+            floatpower(grabberX - targetX, 2.0) +
+            floatpower(grabberY - targetY, 2.0) +
+            floatpower(grabberZ - targetZ, 2.0)
+        );
+
+        if (distance <= 10.0)
+        {
+            if (floatcmp(distance, maxDistance) > 0)
+            {
+                // Found new furthest
+                maxDistance = distance;
+                candidateCount = 1;
+                furthestCandidates[0] = target;
+            }
+            else if (floatcmp(distance, maxDistance) == 0)
+            {
+                // Same distance as furthest, add to pool
+                furthestCandidates[candidateCount++] = target;
+            }
+        }
+    }
+
+    if (candidateCount == 0)
+    {
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "No valid targets to grab within 10 units.");
+    }
+
+    new target = furthestCandidates[random(candidateCount)];
+
+    // Pull the target to the grabber's position
+    SetPlayerPos(target, grabberX, grabberY+1, grabberZ);
+    SendPlayerServerMessage(target, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You have been grabbed!");
+
+    // Anti-spam timer
+    player[playerid][grabAntiSpam] = GetTickCount();
+    return 1;
+}    
 
 stock Stun(playerid)
 {
@@ -617,7 +766,7 @@ stock Stun(playerid)
     for (new i = 0; i < length; i++)
     {
         new target = players[i];
-        if (target == playerid || !IsPlayerConnected(target)) continue;
+        if (target == playerid || !IsPlayerConnected(target) || player[target][iszombie] == 1) continue;
 
         new Float:targetX, Float:targetY, Float:targetZ;
         GetPlayerPos(target, targetX, targetY, targetZ);
@@ -654,9 +803,10 @@ stock Stun(playerid)
     UpdateHudElementForPlayer(target, HUD_HEALTH);
     SetTimerEx("SpawnTimer", 2000, false, "d", target);
     TogglePlayerControllable(target, false);
+    SendPlayerServerMessage(target, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "You have been stunned!");
 
     // Update anti-spam timer
-    player[playerid][biteAntiSpam] = GetTickCount();
+    player[playerid][stunAntiSpam] = GetTickCount();
     return 1;
 }
 
@@ -715,7 +865,7 @@ Bite(playerid)
     for (new i = 0; i < length; i++)
     {
         new target = players[i];
-        if (target == playerid || !IsPlayerConnected(target)) continue;
+        if (target == playerid || !IsPlayerConnected(target) || player[target][iszombie] == 1) continue;
 
         new Float:targetX, Float:targetY, Float:targetZ;
         GetPlayerPos(target, targetX, targetY, targetZ);
@@ -755,7 +905,7 @@ Bite(playerid)
 
     UpdateHudElementForPlayer(target, HUD_HEALTH);
     UpdateHudElementForPlayer(target, HUD_DISEASE);
-
+    SendPlayerServerMessage(target, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_INFO, "Something rips a chunk out of you!");
     // Update anti-spam timer
     player[playerid][biteAntiSpam] = GetTickCount();
     return 1;
@@ -776,7 +926,7 @@ SuperJump(playerid)
     player[playerid][borrowedSuperJumpAntiSpam] = GetTickCount();
     SetPlayerVelocity(playerid, 0.0, 0.0, 5); 
     SendProxMessage(playerid, COLOR_RED, 30.0, PROXY_MSG_TYPE_OTHER,
-        "Bones crack, tendons shred, the earth breaks beneath the their leap");
+        "Bones crack, tendons shred, the earth breaks beneath their leap");
 
     return 1;
 }
