@@ -593,6 +593,20 @@
     return 1;
 }
 
+@cmd() createpump(playerid, params[], help)
+{
+    if(player[playerid][admin] < 5)
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_DENIED, "You do not have a high enough admin rank to use this command.");
+        
+    if(fuelPumpCount >= MAX_FUEL_PUMPS)
+        return SendPlayerServerMessage(playerid, COLOR_SYSTEM, PLR_SERVER_MSG_TYPE_ERROR, "The server has reached its maximum amount of fuel pumps.");
+        
+    new Float:tmpPos[3];
+    GetPlayerPos(playerid, tmpPos[0], tmpPos[1], tmpPos[2]);
+    CreateFuelPump(tmpPos[0], tmpPos[1], tmpPos[2]);
+    return 1;
+}
+
 /*
 * TEST COMMAND TO BE REMOVED ONCE IT'S EASIER TO SURVIVE
 */
